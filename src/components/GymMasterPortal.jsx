@@ -456,11 +456,16 @@ export default function GymMasterPortal({ currentUser, allUsers, fitnessPlans, w
                     background: '#fef9c3',
                     border: '1px solid #fef08a',
                     color: '#854d0e',
-                    padding: '0.55rem',
-                    borderRadius: '6px',
-                    fontSize: '0.75rem',
+                    padding: '0.65rem 0.5rem',
+                    borderRadius: '8px',
+                    fontSize: '0.78rem',
                     fontWeight: 900,
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.35rem',
+                    textAlign: 'center'
                   }}
                 >
                   📋 Assign Workout
@@ -474,11 +479,16 @@ export default function GymMasterPortal({ currentUser, allUsers, fitnessPlans, w
                     background: '#dbeafe',
                     border: '1px solid #bfdbfe',
                     color: '#1e40af',
-                    padding: '0.55rem',
-                    borderRadius: '6px',
-                    fontSize: '0.75rem',
+                    padding: '0.65rem 0.5rem',
+                    borderRadius: '8px',
+                    fontSize: '0.78rem',
                     fontWeight: 900,
-                    cursor: 'pointer'
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '0.35rem',
+                    textAlign: 'center'
                   }}
                 >
                   🥗 Assign Nutrition

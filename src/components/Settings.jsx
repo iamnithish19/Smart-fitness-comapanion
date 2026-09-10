@@ -176,101 +176,209 @@ export default function Settings({ onRefreshData }) {
           </div>
         )}
 
-        <div className="flex gap-3 mt-4">
-          <button className="btn btn-primary" onClick={handleSaveApiKey}>
+        <div className="flex gap-3 mt-4 flex-wrap" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <button className="btn btn-primary" onClick={handleSaveApiKey} style={{ fontWeight: 900, padding: '0.65rem 1.25rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
             💾 Save Key & Model
           </button>
           <button
             className="btn btn-secondary"
             onClick={handleTestConnection}
             disabled={testStatus.loading}
+            style={{ fontWeight: 900, padding: '0.65rem 1.25rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
           >
             {testStatus.loading ? 'Testing...' : '⚡ Test Connection'}
           </button>
           {apiKey && (
-            <button className="btn btn-danger" onClick={handleClearApiKey}>
+            <button className="btn btn-danger" onClick={handleClearApiKey} style={{ fontWeight: 900, padding: '0.65rem 1.25rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
               🗑️ Clear Key
             </button>
           )}
         </div>
       </div>
 
-      <div className="grid grid-2 gap-4 mb-4">
-        <div className="card">
-          <h3 className="section-title mb-3">Application Preferences</h3>
-          <div className="form-grid">
+      <div className="grid grid-2 gap-4 mb-4" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginBottom: '1.5rem' }}>
+        {/* Application Preferences Card */}
+        <div className="card" style={{ padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0', background: '#ffffff', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+          <h3 className="section-title mb-3" style={{ fontWeight: 900, fontSize: '1.15rem', color: '#0f172a', margin: '0 0 1rem 0' }}>Application Preferences</h3>
+          <div className="form-grid" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <div>
-              <label className="input-label">Measurement System</label>
-              <select className="select-input" value={units} onChange={(e) => setUnits(e.target.value)}>
+              <label className="input-label" style={{ fontWeight: 800, fontSize: '0.82rem', color: '#0f172a', display: 'block', marginBottom: '0.35rem' }}>Measurement System</label>
+              <select
+                className="select-input"
+                value={units}
+                onChange={(e) => setUnits(e.target.value)}
+                style={{ width: '100%', padding: '0.7rem 0.9rem', borderRadius: '10px', border: '1px solid #cbd5e1', fontWeight: 700, fontSize: '0.9rem', background: '#ffffff' }}
+              >
                 <option value="metric">Metric System (kg, cm, ml)</option>
                 <option value="imperial">Imperial System (lbs, inches, oz)</option>
               </select>
             </div>
 
-            <div className="flex-between align-center my-2 p-2 border-radius bg-surface">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0.9rem 1.1rem',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0',
+                background: '#f8fafc',
+                gap: '1rem'
+              }}
+            >
               <div>
-                <strong className="text-md">Push & Daily Habit Reminders</strong>
-                <p className="stat-lbl">Receive notifications for hydration, workouts, and supplements.</p>
+                <strong style={{ display: 'block', fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>Push & Daily Habit Reminders</strong>
+                <p className="stat-lbl" style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem', color: '#64748b', fontWeight: 500 }}>Receive notifications for hydration, workouts, and supplements.</p>
               </div>
               <input
                 type="checkbox"
                 className="checkbox-custom"
                 checked={notifications}
                 onChange={(e) => setNotifications(e.target.checked)}
+                style={{ width: '20px', height: '20px', cursor: 'pointer', flexShrink: 0 }}
               />
             </div>
 
-            <div className="flex-between align-center my-2 p-2 border-radius bg-surface">
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0.9rem 1.1rem',
+                borderRadius: '12px',
+                border: '1px solid #e2e8f0',
+                background: '#f8fafc',
+                gap: '1rem'
+              }}
+            >
               <div>
-                <strong className="text-md">Background Device Auto-Sync</strong>
-                <p className="stat-lbl">Sync wearable pulse and steps automatically every 15 minutes.</p>
+                <strong style={{ display: 'block', fontWeight: 800, fontSize: '0.9rem', color: '#0f172a' }}>Background Device Auto-Sync</strong>
+                <p className="stat-lbl" style={{ margin: '0.2rem 0 0 0', fontSize: '0.78rem', color: '#64748b', fontWeight: 500 }}>Sync wearable pulse and steps automatically every 15 minutes.</p>
               </div>
               <input
                 type="checkbox"
                 className="checkbox-custom"
                 checked={autoSync}
                 onChange={(e) => setAutoSync(e.target.checked)}
+                style={{ width: '20px', height: '20px', cursor: 'pointer', flexShrink: 0 }}
               />
             </div>
           </div>
         </div>
 
-        <div className="card">
-          <h3 className="section-title mb-3">Database & Text Storage Tools</h3>
-          <p className="stat-lbl mb-3">
+        {/* Database & Text Storage Tools Card */}
+        <div className="card" style={{ padding: '1.5rem', borderRadius: '16px', border: '1px solid #e2e8f0', background: '#ffffff', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+          <h3 className="section-title mb-2" style={{ fontWeight: 900, fontSize: '1.15rem', color: '#0f172a', margin: '0 0 0.3rem 0' }}>Database & Text Storage Tools</h3>
+          <p className="stat-lbl mb-4" style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 500, margin: '0 0 1.25rem 0', lineHeight: 1.5 }}>
             All your health, workout, and sleep telemetry is stored locally in your browser's persistent database and auto-synchronized to plain text files (`.txt`).
           </p>
 
-          <div className="flex-col gap-3">
-            <button className="btn btn-secondary w-full text-left p-3" onClick={() => db.exportLoginHistoryAsText()}>
-              <span className="text-lg">📜</span>
-              <div className="ml-2 inline-block">
-                <strong>Export User Login History (.txt)</strong>
-                <p className="stat-lbl">Download text file log (`user_logins.txt`) recording every user login ({db.getAll('userLogins').length} users recorded).</p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => db.exportLoginHistoryAsText()}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                width: '100%',
+                padding: '0.85rem 1.1rem',
+                borderRadius: '12px',
+                border: '1px solid #cbd5e1',
+                background: '#ffffff',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: '#dbeafe', color: '#1e40af', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+                📜
+              </div>
+              <div style={{ flex: 1 }}>
+                <strong style={{ display: 'block', fontWeight: 800, fontSize: '0.88rem', color: '#0f172a' }}>Export User Login History (.txt)</strong>
+                <span className="stat-lbl" style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500, display: 'block', marginTop: '0.15rem' }}>Download text log (`user_logins.txt`) with {db.getAll('userLogins').length} user entries.</span>
               </div>
             </button>
 
-            <button className="btn btn-secondary w-full text-left p-3" onClick={() => db.exportDatabaseAsText()}>
-              <span className="text-lg">📄</span>
-              <div className="ml-2 inline-block">
-                <strong>Export Full Database (.txt)</strong>
-                <p className="stat-lbl">Download complete text snapshot of all database tables in human-readable plain text format.</p>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => db.exportDatabaseAsText()}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                width: '100%',
+                padding: '0.85rem 1.1rem',
+                borderRadius: '12px',
+                border: '1px solid #cbd5e1',
+                background: '#ffffff',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: '#fef9c3', color: '#854d0e', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+                📄
+              </div>
+              <div style={{ flex: 1 }}>
+                <strong style={{ display: 'block', fontWeight: 800, fontSize: '0.88rem', color: '#0f172a' }}>Export Full Database (.txt)</strong>
+                <span className="stat-lbl" style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500, display: 'block', marginTop: '0.15rem' }}>Download plain text snapshot of all database tables.</span>
               </div>
             </button>
 
-            <button className="btn btn-secondary w-full text-left p-3" onClick={handleExportDB}>
-              <span className="text-lg">📥</span>
-              <div className="ml-2 inline-block">
-                <strong>Export Local Database (JSON)</strong>
-                <p className="stat-lbl">Download full raw JSON backup of all tables.</p>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleExportDB}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                width: '100%',
+                padding: '0.85rem 1.1rem',
+                borderRadius: '12px',
+                border: '1px solid #cbd5e1',
+                background: '#ffffff',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: '#dcfce7', color: '#166534', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+                📥
+              </div>
+              <div style={{ flex: 1 }}>
+                <strong style={{ display: 'block', fontWeight: 800, fontSize: '0.88rem', color: '#0f172a' }}>Export Local Database (JSON)</strong>
+                <span className="stat-lbl" style={{ fontSize: '0.75rem', color: '#64748b', fontWeight: 500, display: 'block', marginTop: '0.15rem' }}>Download full raw JSON backup of all tables.</span>
               </div>
             </button>
 
-            <button className="btn btn-danger w-full text-left p-3" onClick={handleReseed}>
-              <span className="text-lg">🔄</span>
-              <div className="ml-2 inline-block">
-                <strong>Reset Database to Seed Defaults</strong>
-                <p className="stat-lbl text-rose">Wipes custom modifications and restores demo seed.</p>
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={handleReseed}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.85rem',
+                width: '100%',
+                padding: '0.85rem 1.1rem',
+                borderRadius: '12px',
+                border: '1px solid #fecaca',
+                background: '#fef2f2',
+                cursor: 'pointer',
+                textAlign: 'left',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <div style={{ width: '38px', height: '38px', borderRadius: '10px', background: '#fee2e2', color: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
+                🔄
+              </div>
+              <div style={{ flex: 1 }}>
+                <strong style={{ display: 'block', fontWeight: 800, fontSize: '0.88rem', color: '#dc2626' }}>Reset Database to Seed Defaults</strong>
+                <span className="stat-lbl" style={{ fontSize: '0.75rem', color: '#b91c1c', fontWeight: 500, display: 'block', marginTop: '0.15rem' }}>Wipes custom modifications and restores initial seed.</span>
               </div>
             </button>
           </div>

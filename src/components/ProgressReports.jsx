@@ -26,6 +26,7 @@ export default function ProgressReports({ reports, onGenerate, onDelete, user })
     return true;
   });
 
+   
   // Calculate text analytics summary
   const totalReports = sorted.length;
   const avgCompletion = totalReports > 0
@@ -50,7 +51,7 @@ export default function ProgressReports({ reports, onGenerate, onDelete, user })
             Text-based weekly workout reports, target completion scores, milestone notes, and Gemini AI performance analysis.
           </p>
         </div>
-
+                  
         <div className="flex align-center gap-2 flex-wrap">
           <button
             className="btn btn-primary text-xs flex align-center gap-1"
@@ -111,32 +112,32 @@ export default function ProgressReports({ reports, onGenerate, onDelete, user })
       </div>
                
       {/* Text Filter Bar */}
-      <div className="card mb-4 p-3 flex-between align-center flex-wrap gap-2" style={{ borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-        <div className="flex align-center gap-2">
-          <span style={{ fontWeight: 900, fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', marginRight: '0.5rem' }}>
+      <div className="card mb-4 p-3 flex-between align-center flex-wrap gap-2" style={{ borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <div className="flex align-center gap-2 flex-wrap" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <span style={{ fontWeight: 900, fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
             FILTER TEXT LOGS:
           </span>
           <button
             className={`btn btn-sm ${filterMode === 'all' ? 'btn-primary' : 'btn-secondary'}`}
             onClick={() => setFilterMode('all')}
-            style={{ fontWeight: 900, padding: '0.5rem 1rem', borderRadius: '8px' }}
+            style={{ fontWeight: 900, padding: '0.55rem 1.1rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
           >
             📋 All Text Reports ({sorted.length})
           </button>
           <button
             className={`btn btn-sm ${filterMode === 'high' ? 'btn-primary' : 'btn-secondary'}`}
             onClick={() => setFilterMode('high')}
-            style={{ fontWeight: 900, padding: '0.5rem 1rem', borderRadius: '8px' }}
+            style={{ fontWeight: 900, padding: '0.55rem 1.1rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
           >
             ⭐ High Target Scores (80%+)
           </button>
         </div>
 
-        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ca8a04' }}>
+        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ca8a04', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
           📄 Text-Only Mode Active (No Photos)
         </span>
       </div>
-
+ 
       {/* Text Workout Report Cards List */}
       <div>
         <h3 className="section-title mb-3" style={{ fontSize: '1.25rem', fontWeight: 900 }}>
@@ -151,8 +152,8 @@ export default function ProgressReports({ reports, onGenerate, onDelete, user })
           <div className="reports-text-list" style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {filteredReports.map((r) => {
               const isHigh = r.completion_percentage >= 80;
-
-              return (
+                             
+              return (    
                 <div
                   key={r.report_id}
                   className="card p-4"

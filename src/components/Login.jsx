@@ -31,7 +31,11 @@ export default function Login({ onLoginSuccess }) {
   const [gymName, setGymName] = useState('Iron Forge Gym');
   const [specialty, setSpecialty] = useState('Head Performance Coach');
 
-  const existingUsers = db.getAll('users');
+  const [existingUsers, setExistingUsers] = useState(() => db.getAll('users'));
+
+  useEffect(() => {
+    setExistingUsers(db.getAll('users'));
+  }, [isRegister]);
 
   const handleDemoLogin = (user) => {
     setError('');
@@ -71,7 +75,7 @@ export default function Login({ onLoginSuccess }) {
       setError(err.message || 'Authentication failed.');
     }
   };
-
+        
   return (
     <div
       className="login-page-homepage"
@@ -302,7 +306,8 @@ export default function Login({ onLoginSuccess }) {
               background: isDark ? 'rgba(255, 255, 255, 0.04)' : '#e2e8f0',
               padding: '0.4rem',
               borderRadius: '14px',
-              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1'
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.12)' : '1px solid #cbd5e1',
+              alignItems: 'stretch'
             }}
           >
             {/* OPTION 1: SIGN IN */}
@@ -321,10 +326,15 @@ export default function Login({ onLoginSuccess }) {
                 cursor: 'pointer',
                 textAlign: 'center',
                 boxShadow: !isRegister ? '0 2px 10px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.15s ease'
+                transition: 'all 0.15s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%'
               }}
             >
-              <div style={{ fontWeight: 900, fontSize: '0.95rem', letterSpacing: '0.04em' }}>
+              <div style={{ fontWeight: 900, fontSize: '0.95rem', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 🔑 SIGN IN
               </div>
               <div style={{ fontSize: '0.7rem', opacity: 0.8, fontWeight: 700, marginTop: '2px' }}>
@@ -348,10 +358,15 @@ export default function Login({ onLoginSuccess }) {
                 cursor: 'pointer',
                 textAlign: 'center',
                 boxShadow: isRegister ? '0 2px 10px rgba(0,0,0,0.1)' : 'none',
-                transition: 'all 0.15s ease'
+                transition: 'all 0.15s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                height: '100%'
               }}
             >
-              <div style={{ fontWeight: 900, fontSize: '0.95rem', letterSpacing: '0.04em' }}>
+              <div style={{ fontWeight: 900, fontSize: '0.95rem', letterSpacing: '0.04em', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 ✨ CREATE ACCOUNT
               </div>
               <div style={{ fontSize: '0.7rem', opacity: 0.8, fontWeight: 700, marginTop: '2px' }}>
@@ -552,17 +567,21 @@ export default function Login({ onLoginSuccess }) {
             </button>
           </form>
 
-          {/* DEMO USER QUICK SELECTION */}
+          {/* SAVED USER & DEMO ACCOUNT SELECTION */}
           <div className="demo-section" style={{ marginTop: '1.75rem' }}>
             <div className="demo-divider mb-3" style={{ textAlign: 'center' }}>
-              <span style={{ fontWeight: 900, color: isDark ? '#00F0FF' : '#ca8a04', letterSpacing: '0.08em', fontSize: '0.78rem' }}>
-                ⚡ QUICK DEMO ACCOUNTS (GYM MASTER & MEMBERS)
+              <span style={{ fontWeight: 900, color: isDark ? '#00F0FF' : '#ca8a04', letterSpacing: '0.08em', fontSize: '0.82rem', display: 'block', marginBottom: '0.25rem' }}>
+                💾 SAVED ACCOUNTS & REGISTERED USERS ({existingUsers.length})
+              </span>
+              <span style={{ fontSize: '0.72rem', color: isDark ? 'rgba(57, 255, 20, 0.9)' : '#15803d', fontWeight: 700, letterSpacing: '0.04em' }}>
+                ● Created accounts are stored permanently in browser LocalStorage
               </span>
             </div>
 
             <div className="demo-users-list" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
               {existingUsers.map((u) => {
                 const isMaster = u.role === 'gym_master';
+                const isCustomUser = Number(u.user_id) > 4;
                 return (
                   <button
                     key={u.user_id}
@@ -570,12 +589,16 @@ export default function Login({ onLoginSuccess }) {
                     className="demo-user-btn"
                     onClick={() => handleDemoLogin(u)}
                     style={{
-                      borderColor: isMaster ? (isDark ? '#FFD700' : '#fef08a') : (isDark ? '#00F0FF' : '#bfdbfe'),
-                      borderWidth: '1.5px',
+                      borderColor: isCustomUser 
+                        ? (isDark ? '#39FF14' : '#16a34a') 
+                        : (isMaster ? (isDark ? '#FFD700' : '#fef08a') : (isDark ? '#00F0FF' : '#bfdbfe')),
+                      borderWidth: isCustomUser ? '2px' : '1.5px',
                       borderRadius: '12px',
-                      background: isMaster
-                        ? (isDark ? 'linear-gradient(90deg, rgba(255,215,0,0.15) 0%, rgba(10,14,26,0.6) 100%)' : '#fef9c3')
-                        : (isDark ? 'linear-gradient(90deg, rgba(0,240,255,0.1) 0%, rgba(10,14,26,0.6) 100%)' : '#ffffff'),
+                      background: isCustomUser
+                        ? (isDark ? 'linear-gradient(90deg, rgba(57,255,20,0.12) 0%, rgba(10,14,26,0.6) 100%)' : '#f0fdf4')
+                        : (isMaster
+                            ? (isDark ? 'linear-gradient(90deg, rgba(255,215,0,0.15) 0%, rgba(10,14,26,0.6) 100%)' : '#fef9c3')
+                            : (isDark ? 'linear-gradient(90deg, rgba(0,240,255,0.1) 0%, rgba(10,14,26,0.6) 100%)' : '#ffffff')),
                       padding: '0.85rem 1.1rem',
                       display: 'flex',
                       alignItems: 'center',
@@ -595,7 +618,7 @@ export default function Login({ onLoginSuccess }) {
                         padding: 0,
                         overflow: 'hidden',
                         flexShrink: 0,
-                        border: isMaster ? '2px solid #ca8a04' : '2px solid #2563eb'
+                        border: isCustomUser ? '2px solid #16a34a' : (isMaster ? '2px solid #ca8a04' : '2px solid #2563eb')
                       }}
                     >
                       {u.avatar ? (
@@ -625,6 +648,24 @@ export default function Login({ onLoginSuccess }) {
                         >
                           {isMaster ? '👑 GYM MASTER' : '🏋️ GYM MEMBER'}
                         </span>
+
+                        {isCustomUser && (
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              padding: '0.18rem 0.5rem',
+                              borderRadius: '6px',
+                              fontWeight: 900,
+                              letterSpacing: '0.06em',
+                              background: isDark ? 'rgba(57, 255, 20, 0.25)' : '#dcfce7',
+                              color: isDark ? '#39FF14' : '#15803d',
+                              border: isDark ? '1px solid rgba(57, 255, 20, 0.5)' : '1px solid #86efac',
+                              textTransform: 'uppercase'
+                            }}
+                          >
+                            ✨ SAVED USER
+                          </span>
+                        )}
                       </div>
 
                       <span className="demo-user-meta" style={{ fontSize: '0.75rem', color: isDark ? 'rgba(255,255,255,0.7)' : '#475569', fontWeight: 600 }}>
@@ -635,7 +676,9 @@ export default function Login({ onLoginSuccess }) {
                     <span
                       className="demo-user-arrow"
                       style={{
-                        color: isMaster ? (isDark ? '#FFD700' : '#ca8a04') : (isDark ? '#00F0FF' : '#2563eb'),
+                        color: isCustomUser
+                          ? (isDark ? '#39FF14' : '#16a34a')
+                          : (isMaster ? (isDark ? '#FFD700' : '#ca8a04') : (isDark ? '#00F0FF' : '#2563eb')),
                         fontWeight: 900,
                         fontSize: '1.2rem',
                         marginLeft: 'auto'

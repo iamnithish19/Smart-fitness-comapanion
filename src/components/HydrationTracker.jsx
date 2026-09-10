@@ -37,38 +37,113 @@ export default function HydrationTracker({ hydrationLogs = [], onAddHydration })
         </div>
 
         <div className="card">
-          <h3 className="section-title mb-3">Quick Fluid Intake Buttons</h3>
-          <div className="grid grid-3 gap-3 mb-4">
-            <button className="btn btn-secondary p-3 flex-col flex-center" onClick={() => handleAdd(250)}>
-              <span className="text-2xl">🥛</span>
-              <span className="font-bold mt-1">+250 ml</span>
-              <span className="stat-lbl">Glass of Water</span>
+          <h3 className="section-title mb-3" style={{ fontWeight: 900, color: '#0f172a' }}>Quick Fluid Intake Options</h3>
+          <div className="grid grid-3 gap-3 mb-4" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '0.85rem', marginBottom: '1.5rem' }}>
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleAdd(250)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1rem 0.5rem',
+                minHeight: '110px',
+                borderRadius: '12px',
+                border: '1.5px solid #cbd5e1',
+                background: '#ffffff',
+                cursor: 'pointer',
+                textAlign: 'center',
+                transition: 'all 0.15s ease',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+              }}
+            >
+              <span style={{ fontSize: '1.75rem', marginBottom: '0.3rem' }}>🥛</span>
+              <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#1e40af' }}>+250 ml</span>
+              <span className="stat-lbl" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', marginTop: '0.2rem' }}>Glass of Water</span>
             </button>
-            <button className="btn btn-secondary p-3 flex-col flex-center" onClick={() => handleAdd(500)}>
-              <span className="text-2xl">🧴</span>
-              <span className="font-bold mt-1">+500 ml</span>
-              <span className="stat-lbl">Water Bottle</span>
+
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleAdd(500)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1rem 0.5rem',
+                minHeight: '110px',
+                borderRadius: '12px',
+                border: '1.5px solid #cbd5e1',
+                background: '#ffffff',
+                cursor: 'pointer',
+                textAlign: 'center',
+                transition: 'all 0.15s ease',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+              }}
+            >
+              <span style={{ fontSize: '1.75rem', marginBottom: '0.3rem' }}>🧴</span>
+              <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#1e40af' }}>+500 ml</span>
+              <span className="stat-lbl" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', marginTop: '0.2rem' }}>Water Bottle</span>
             </button>
-            <button className="btn btn-secondary p-3 flex-col flex-center" onClick={() => handleAdd(750)}>
-              <span className="text-2xl">🍾</span>
-              <span className="font-bold mt-1">+750 ml</span>
-              <span className="stat-lbl">Sports Flask</span>
+
+            <button
+              className="btn btn-secondary"
+              onClick={() => handleAdd(750)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                padding: '1rem 0.5rem',
+                minHeight: '110px',
+                borderRadius: '12px',
+                border: '1.5px solid #cbd5e1',
+                background: '#ffffff',
+                cursor: 'pointer',
+                textAlign: 'center',
+                transition: 'all 0.15s ease',
+                boxShadow: '0 2px 6px rgba(0,0,0,0.03)'
+              }}
+            >
+              <span style={{ fontSize: '1.75rem', marginBottom: '0.3rem' }}>🍾</span>
+              <span style={{ fontWeight: 900, fontSize: '0.95rem', color: '#1e40af' }}>+750 ml</span>
+              <span className="stat-lbl" style={{ fontSize: '0.75rem', fontWeight: 600, color: '#64748b', marginTop: '0.2rem' }}>Sports Flask</span>
             </button>
           </div>
 
-          <hr className="divider my-3" />
+          <hr className="divider my-3" style={{ border: 'none', borderTop: '1px solid #e2e8f0', margin: '1.25rem 0' }} />
 
-          <h4 className="input-label mb-2">Custom Intake Logger</h4>
-          <div className="flex-gap">
+          <h4 className="input-label mb-2" style={{ fontWeight: 800, fontSize: '0.85rem', color: '#0f172a', marginBottom: '0.4rem' }}>Custom Intake Logger</h4>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <input
               type="number"
               className="input-field"
               value={customMl}
               onChange={(e) => setCustomMl(e.target.value)}
               placeholder="Amount in ml"
+              style={{ flex: 1, padding: '0.7rem 1rem', borderRadius: '10px', border: '1px solid #cbd5e1', fontWeight: 700, fontSize: '0.9rem' }}
             />
-            <button className="btn btn-primary" onClick={() => handleAdd(customMl)}>
-              Log Intake
+            <button
+              className="btn btn-primary"
+              onClick={() => handleAdd(customMl)}
+              style={{
+                padding: '0.7rem 1.25rem',
+                borderRadius: '10px',
+                background: '#2563eb',
+                color: '#ffffff',
+                fontWeight: 900,
+                border: 'none',
+                cursor: 'pointer',
+                fontSize: '0.9rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.4rem',
+                whiteSpace: 'nowrap'
+              }}
+            >
+              💧 Log Intake
             </button>
           </div>
         </div>

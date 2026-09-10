@@ -51,7 +51,7 @@ export default function Profile({ user, onUpdateProfile }) {
     setForm((f) => ({ ...f, avatar: letterAvatar }));
     setSaved(false);
   };
-
+         
   const handleSubmit = (e) => {
     e.preventDefault();
 

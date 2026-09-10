@@ -395,22 +395,26 @@ export function authenticateUser(emailOrName, password) {
   const users = getAll('users');
   const term = emailOrName.trim().toLowerCase();
 
-  const user = users.find(
-    (u) =>
-      (u.email && u.email.toLowerCase() === term) ||
-      (u.name && u.name.toLowerCase() === term) ||
-      term === 'ava@companion.fit' ||
-      term === 'ava' ||
-      term === 'marcus@gymmaster.fit' ||
-      term === 'marcus'
-  );
+  const user = users.find((u) => {
+    const userEmail = (u.email || '').trim().toLowerCase();
+    const userName = (u.name || '').trim().toLowerCase();
+    const firstName = userName.split(' ')[0];
+
+    return (
+      (userEmail && userEmail === term) ||
+      (userName && userName === term) ||
+      (firstName && firstName === term) ||
+      (term === 'ava' && userEmail === 'ava@companion.fit') ||
+      (term === 'marcus' && userEmail === 'marcus@gymmaster.fit')
+    );
+  });
 
   if (!user) {
-    throw new Error('User not found. Check credentials or register a new account.');
+    throw new Error('User not found. Please check your email or name, or create a new account.');
   }
 
   if (user.password && user.password !== password) {
-    throw new Error('Invalid password.');
+    throw new Error('Invalid password. Please check your password and try again.');
   }
 
   recordUserLogin(user);
