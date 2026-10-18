@@ -3,6 +3,7 @@ import { Sun, Moon, Mail, KeyRound, ShieldCheck, Sparkles, Lock, ArrowRight, Use
 import * as db from '../services/db.js';
 import { sendOtp } from '../services/otpService.js';
 import OtpVerification from './OtpVerification.jsx';
+import gymFacilityBg from '../assets/gym_facility_bg.jpg';
 
 export default function Login({ onLoginSuccess }) {
   const [isRegister, setIsRegister] = useState(false);
@@ -242,7 +243,7 @@ export default function Login({ onLoginSuccess }) {
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'url("/gym_facility_bg.jpg")',
+            backgroundImage: `url(${gymFacilityBg})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center center',
             opacity: isDark ? 0.95 : 0.92,
