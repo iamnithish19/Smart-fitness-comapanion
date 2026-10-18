@@ -315,7 +315,7 @@ function mongoApiPlugin() {
 }
 
 export default defineConfig({
-  base: './',
+  base: '/Smart-fitness-comapanion/',
   plugins: [react(), emailPlugin(), mongoApiPlugin()],
   server: {
     port: 5173
