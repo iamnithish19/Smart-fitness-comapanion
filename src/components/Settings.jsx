@@ -76,7 +76,7 @@ export default function Settings({ onRefreshData }) {
       <header className="page-header">
         <div>
           <h1 className="page-title">Settings & System Preferences</h1>
-          <p className="page-subtitle">Manage AI integration, system units, database state, and telemetry preferences.</p>
+          <p className="page-subtitle">Manage AI integration, system units, and local data preferences.</p>
         </div>
       </header>
 
@@ -84,11 +84,11 @@ export default function Settings({ onRefreshData }) {
       <div className="card mb-4 border-primary">
         <div className="flex-between align-center mb-3">
           <div>
-            <h3 className="section-title">🤖 AI Virtual Coach Integration (Google Gemini API)</h3>
+            <h3 className="section-title">🤖 AI Virtual Coach Integration</h3>
             <p className="stat-lbl">Connect your free Google Gemini API key to activate live personalized AI coaching.</p>
           </div>
           <span className={`badge ${apiKey ? 'badge-success' : 'badge-warning'}`}>
-            {apiKey ? '🟢 Gemini Connected' : '🟡 Free API Key Needed'}
+            {apiKey ? '🟢 Gemini Connected' : '🟡 API Key Needed'}
           </span>
         </div>
 

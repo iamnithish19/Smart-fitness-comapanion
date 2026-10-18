@@ -121,14 +121,14 @@ export default function NutritionPlan({ plans, onAdd, onDelete, user }) {
       {/* Header */}
       <div className="page-head flex-between align-center flex-wrap gap-2 mb-4">
         <div>
-          <div className="page-eyebrow" style={{ fontWeight: 900, color: '#ca8a04', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            NUTRITION & MACRO TELEMETRY →
+          <div className="page-eyebrow" style={{ fontWeight: 800, color: '#ca8a04', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            NUTRITION
           </div>
           <h1 className="page-title" style={{ fontSize: '1.75rem', fontWeight: 900, margin: '0.2rem 0' }}>
-            Nutrition Plan & Automatic BMI Recommender
+            Nutrition Plan & Macro Targets
           </h1>
           <p className="page-desc" style={{ fontWeight: 600, color: '#64748b' }}>
-            Automatic BMI calculation and intelligent caloric & macro recommendations tailored specifically to your body profile.
+            Caloric and macro targets tailored to your body composition and goals.
           </p>
         </div>
 
@@ -137,7 +137,7 @@ export default function NutritionPlan({ plans, onAdd, onDelete, user }) {
             type="text"
             className="input-field-sm"
             style={{ width: '180px', padding: '0.55rem 0.8rem', borderRadius: '8px', border: '1px solid #cbd5e1', fontWeight: 700 }}
-            placeholder="Diet Focus (e.g. Keto, Clean)"
+            placeholder="Diet Focus (e.g. Keto)"
             value={dietPref}
             onChange={(e) => setDietPref(e.target.value)}
           />
@@ -147,7 +147,7 @@ export default function NutritionPlan({ plans, onAdd, onDelete, user }) {
             disabled={isGeneratingMeal}
             style={{ fontWeight: 900, padding: '0.65rem 1.1rem', borderRadius: '8px', cursor: 'pointer' }}
           >
-            {isGeneratingMeal ? '⏳ Gemini Generating...' : '🥗 AI Generate Meal Plan'}
+            {isGeneratingMeal ? '⏳ Generating...' : '🥗 AI Generate Meal Plan'}
           </button>
         </div>
       </div>
@@ -167,11 +167,11 @@ export default function NutritionPlan({ plans, onAdd, onDelete, user }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <span style={{ fontSize: '1.75rem' }}>🧮</span>
             <div>
-              <h2 style={{ fontSize: '1.35rem', fontWeight: 900, margin: 0, color: '#0f172a' }}>
-                AUTOMATIC BMI NUTRITION SUGGESTION ENGINE
+              <h2 style={{ fontSize: '1.25rem', fontWeight: 900, margin: 0, color: '#0f172a' }}>
+                BMI Nutrition Recommendation
               </h2>
               <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b' }}>
-                Calculated live from your current Weight ({userWeight} kg) & Height ({userHeight} cm)
+                Based on Weight ({userWeight} kg) & Height ({userHeight} cm)
               </span>
             </div>
           </div>
@@ -232,7 +232,7 @@ export default function NutritionPlan({ plans, onAdd, onDelete, user }) {
 
           <div>
             <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', marginBottom: '0.3rem' }}>
-              AUTOMATIC BMI SCORE
+              BMI SCORE
             </label>
             <div style={{ fontSize: '1.25rem', fontWeight: 900, color: bmiBadgeColor, paddingTop: '0.2rem' }}>
               {bmi} kg/m²

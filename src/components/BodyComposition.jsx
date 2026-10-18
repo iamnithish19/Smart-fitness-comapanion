@@ -10,7 +10,7 @@ export default function BodyComposition({ measurements = [], user = {}, onAddMea
     hips_cm: 94,
     bicep_cm: 31
   };
-
+     
   const heightM = (user.height || 168) / 100;
   const bmi = (latest.weight / (heightM * heightM)).toFixed(1);
 

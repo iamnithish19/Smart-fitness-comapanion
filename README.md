@@ -1,76 +1,102 @@
-# Smart Fitness Companion
+# 🏋️ Smart Fitness Companion
 
-A React (Vite) web app implementing the UML class diagram: `User`,
-`FitnessPlan`, `Workout`, `Exercise`, `HealthTracker`, `Device`,
-`NutritionPlan`, and `Progress report`.
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Available%20Now-brightgreen?style=for-the-badge&logo=github)](https://iamnithish19.github.io/Smart-fitness-comapanion/)
+[![Built With React & Vite](https://img.shields.io/badge/React%2018-Vite-blue?style=for-the-badge&logo=react)](https://vitejs.dev/)
 
-## Stack
-- React 18 + Vite
-- Plain CSS (`src/styles/global.css`) — no external UI framework
-- A lightweight embedded "database" (`src/services/db.js`) seeded from
-  `src/data/db.json` and persisted to the browser's `localStorage`, so
-  data survives page reloads without a backend server.
+> **Live Application URL:**  
+> 🌐 **[https://iamnithish19.github.io/Smart-fitness-comapanion/](https://iamnithish19.github.io/Smart-fitness-comapanion/)**  
+> *Anyone can use this application directly in any web browser at any time without running a local server!*
 
-## Run it
+---
+
+## 🌟 Highlights & Features
+
+- **📊 Comprehensive Health & Telemetry Dashboard**: Heart rate zones, sleep quality index, VO2 max, step tracker, water hydration tracker, and real-time activity feed.
+- **🏋️ Live Workout Tracker**: Step-by-step active exercise guidance, set logging, target heart rate feedback, and calorie computation.
+- **🥗 Smart Nutrition & Dietitian Engine**: Personalized macro splits (Protein, Carbs, Fats), BMR/TDEE analysis based on age & BMI, recipe library, and meal plans.
+- **🏆 Gamification & Community**: Daily challenges, streaks, achievement badges, community leaderboard, social feed, and member rankings.
+- **🏢 Gym Master Portal & SaaS Management**: Member roster, multi-tier membership plans, QR access pass generation, attendance telemetry, and revenue analytics.
+- **💾 Dual Storage Architecture**: Operates 100% offline via browser `localStorage` + optional real-time cloud sync with MongoDB Atlas.
+- **🎨 Ultra-responsive UI**: Sleek dark & light theme modes, glassmorphic cards, and mobile-friendly design.
+
+---
+
+## 🚀 Instant Online Access
+
+You can open and use the live application right now:
+👉 **[Open Smart Fitness Companion Online](https://iamnithish19.github.io/Smart-fitness-comapanion/)**
+
+*(To enable automated deployments on GitHub: Navigate to repository **Settings** → **Pages** → under **Build and deployment**, select **GitHub Actions**)*.
+
+---
+
+## 💻 Local Development Setup
+
+If you wish to clone and run the project locally on your machine:
 
 ```bash
+# 1. Clone the repository
+git clone https://github.com/iamnithish19/Smart-fitness-comapanion.git
+
+# 2. Enter project directory
+cd Smart-fitness-comapanion
+
+# 3. Install dependencies
 npm install
+
+# 4. Start local development server
 npm run dev
 ```
 
-Then open the printed local URL (default `http://localhost:5173`).
+Then open `http://localhost:5173` in your browser.
 
-To produce a static production build:
+### Production Build
 
 ```bash
 npm run build
 npm run preview
 ```
 
-## Project structure
+---
+
+## 📁 Repository Structure
 
 ```
 smart-fitness-companion/
-├── index.html
-├── package.json
-├── vite.config.js
+├── .github/
+│   └── workflows/
+│       └── deploy.yml               # Automated GitHub Pages CI/CD deployment
+├── public/                          # Static hero and gym imagery
+├── dataset/                         # Knowledge base, exercises, and telemetry datasets
 ├── src/
-│   ├── main.jsx                 # React entry point
-│   ├── App.jsx                  # routes pages, wires db.js to components
-│   ├── data/
-│   │   └── db.json              # seed data for every entity
-│   ├── services/
-│   │   └── db.js                # CRUD + domain methods (updateProfile, generateProgressReport)
-│   ├── components/
-│   │   ├── Sidebar.jsx
+│   ├── main.jsx                     # Application entry point
+│   ├── App.jsx                      # Primary app orchestrator & tab routing
+│   ├── components/                  # 25+ Interactive feature modules
 │   │   ├── Dashboard.jsx
-│   │   ├── ProgressRing.jsx
-│   │   ├── Profile.jsx          # User
-│   │   ├── FitnessPlans.jsx     # FitnessPlan → Workout → Exercise
-│   │   ├── HealthTracker.jsx
-│   │   ├── Devices.jsx
+│   │   ├── WorkoutLive.jsx
+│   │   ├── FitnessPlans.jsx
 │   │   ├── NutritionPlan.jsx
-│   │   └── ProgressReports.jsx
+│   │   ├── RecipeLibrary.jsx
+│   │   ├── SleepAnalytics.jsx
+│   │   ├── GymMasterPortal.jsx
+│   │   ├── CommunityLeaderboard.jsx
+│   │   └── ...
+│   ├── services/
+│   │   ├── db.js                    # Embedded reactive storage & CRUD engine
+│   │   ├── mongoService.js          # MongoDB Atlas cloud synchronization
+│   │   ├── currencyService.js       # Real-time multi-currency converter
+│   │   └── otpService.js            # Secure OTP authentication service
+│   ├── data/
+│   │   └── db.json                  # Seed data database
 │   └── styles/
-│       └── global.css
+│       └── global.css               # Design system & dark/light mode styles
+├── index.html
+├── vite.config.js
+└── package.json
 ```
 
-## Entity relationships modeled
+---
 
-- `User` **has** many `FitnessPlan`
-- `FitnessPlan` **contains** many `Workout`
-- `Workout` **consists_of** many `Exercise`
-- `User` **records** many `HealthTracker` entries
-- `User` **owns** many `Device`
-- `User` **follows** a `NutritionPlan`
-- `User` **generates** many `Progress report` entries (via `generate()`)
+## 📜 License
 
-## Notes on the "database"
-
-`src/services/db.js` exposes `getAll`, `filterBy`, `insert`, `update`,
-`remove`, `resetDatabase`, and `exportDatabase`, plus two domain
-operations pulled straight from the class diagram: `updateProfile()`
-on `User` and `generateProgressReport()` (backing `Progress
-report.generate()`). Swap this module out for real HTTP calls to a
-backend/ORM later without touching any component code — every
-component only talks to this service layer.
+Created with ❤️ by [iamnithish19](https://github.com/iamnithish19).

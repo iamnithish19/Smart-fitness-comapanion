@@ -242,20 +242,19 @@ export default function CommunityLeaderboard({ rankings = [], currentUser, users
                       width: '48px',
                       height: '48px',
                       borderRadius: '50%',
-                      overflow: 'hidden',
-                      border: isCurrentUser
-                        ? '2.5px solid #2563eb'
-                        : isGymMaster
-                        ? '2.5px solid #ca8a04'
-                        : '2px solid #cbd5e1',
+                      background: isCurrentUser ? '#2563eb' : isGymMaster ? '#ca8a04' : '#10b981',
+                      color: '#ffffff',
+                      fontWeight: 900,
+                      fontSize: '1.2rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      textTransform: 'uppercase',
+                      flexShrink: 0,
                       boxShadow: isCurrentUser ? '0 2px 8px rgba(37,99,235,0.3)' : 'none'
                     }}
                   >
-                    <img
-                      src={displayAvatar}
-                      alt={displayName}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
+                    {(displayName || 'Athlete').charAt(0).toUpperCase()}
                   </div>
 
                   {/* User Name & Role Info */}

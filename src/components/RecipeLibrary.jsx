@@ -125,14 +125,14 @@ export default function RecipeLibrary({ recipes = [], onAddToPlan, user }) {
     <div className="page-container" style={{ padding: '2rem' }}>
       <header className="page-header flex-between align-center flex-wrap gap-2 mb-4">
         <div>
-          <div className="page-eyebrow" style={{ fontWeight: 900, color: '#ca8a04', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            MEAL & NUTRITION CATALOG →
+          <div className="page-eyebrow" style={{ fontWeight: 800, color: '#ca8a04', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            RECIPES
           </div>
           <h1 className="page-title" style={{ fontSize: '1.75rem', fontWeight: 900, margin: '0.2rem 0' }}>
             Recipe & Meal Library
           </h1>
           <p className="page-subtitle" style={{ fontWeight: 600, color: '#64748b' }}>
-            Explore recipes, meal preparation steps, and step-by-step food making processes.
+            Explore recipes, macro details, and step-by-step cooking instructions.
           </p>
         </div>
 
@@ -150,7 +150,7 @@ export default function RecipeLibrary({ recipes = [], onAddToPlan, user }) {
             disabled={isScanning}
             style={{ fontWeight: 900, padding: '0.65rem 1.1rem', borderRadius: '8px', cursor: 'pointer' }}
           >
-            {isScanning ? '⏳ Gemini Scanning Photo...' : '📷 AI Photo Meal Scanner'}
+            {isScanning ? '⏳ Scanning Photo...' : '📷 AI Photo Meal Scanner'}
           </button>
         </div>
       </header>
@@ -303,45 +303,39 @@ export default function RecipeLibrary({ recipes = [], onAddToPlan, user }) {
               justifyContent: 'space-between'
             }}
           >
-            {recipe.image && (
-              <div style={{ position: 'relative', height: '180px', width: '100%' }}>
-                <img
-                  src={recipe.image}
-                  alt={recipe.title}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
-                <div style={{ position: 'absolute', top: 12, left: 12 }}>
-                  <span
-                    style={{
-                      background: '#ca8a04',
-                      color: '#ffffff',
-                      fontSize: '0.72rem',
-                      fontWeight: 900,
-                      padding: '0.25rem 0.65rem',
-                      borderRadius: '6px',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    {recipe.category}
-                  </span>
-                </div>
-                <div
+            <div style={{ position: 'relative', height: '100px', width: '100%', background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <span style={{ fontSize: '2.5rem' }}>🍲</span>
+              <div style={{ position: 'absolute', top: 12, left: 12 }}>
+                <span
                   style={{
-                    position: 'absolute',
-                    bottom: 12,
-                    right: 12,
-                    background: 'rgba(15,23,42,0.85)',
+                    background: '#ca8a04',
                     color: '#ffffff',
-                    fontSize: '0.75rem',
+                    fontSize: '0.72rem',
                     fontWeight: 900,
                     padding: '0.25rem 0.65rem',
-                    borderRadius: '6px'
+                    borderRadius: '6px',
+                    textTransform: 'uppercase'
                   }}
                 >
-                  ⏱ {recipe.time}
-                </div>
+                  {recipe.category}
+                </span>
               </div>
-            )}
+              <div
+                style={{
+                  position: 'absolute',
+                  bottom: 12,
+                  right: 12,
+                  background: 'rgba(15,23,42,0.85)',
+                  color: '#ffffff',
+                  fontSize: '0.75rem',
+                  fontWeight: 900,
+                  padding: '0.25rem 0.65rem',
+                  borderRadius: '6px'
+                }}
+              >
+                ⏱ {recipe.time}
+              </div>
+            </div>
 
             <div className="p-4" style={{ padding: '1.25rem', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div>

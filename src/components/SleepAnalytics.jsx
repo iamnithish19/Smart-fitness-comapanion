@@ -49,22 +49,22 @@ export default function SleepAnalytics({ sleepLogs = [], onAddSleep, user }) {
     <div className="page-container">
       <header className="page-header flex-between align-center flex-wrap gap-2">
         <div>
-          <h1 className="page-title">Sleep & Recovery Analytics</h1>
-          <p className="page-subtitle">Track sleep architecture, recovery scores, and restorative rest analyzed by Gemini AI.</p>
+          <h1 className="page-title">Sleep & Recovery</h1>
+          <p className="page-subtitle">Track sleep duration, quality scores, and recovery trends.</p>
         </div>
         <button
           className="btn btn-primary text-xs flex align-center gap-1"
           onClick={handleFetchAiAdvice}
           disabled={loadingAi}
         >
-          {loadingAi ? '⏳ Gemini Analyzing...' : '🌙 AI Sleep Insights'}
+          {loadingAi ? '⏳ Analyzing...' : '🌙 AI Sleep Insights'}
         </button>
       </header>
 
       {aiAdvice && (
         <div className="card mb-4 p-4 border-primary bg-surface">
           <h3 className="section-title text-md flex align-center gap-2 mb-2">
-            <span>🤖</span> Gemini AI Biohacking Recovery Report
+            <span>🤖</span> AI Sleep Recovery Insight
           </h3>
           <div className="text-sm text-secondary leading-relaxed">
             {aiAdvice.split('\n').map((l, idx) => (

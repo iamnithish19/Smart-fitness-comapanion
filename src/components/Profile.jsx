@@ -1,21 +1,36 @@
-import React, { useState, useRef } from 'react';
-import { generateLetterAvatarSvg } from '../services/db.js';
+import React, { useState, useEffect, useRef } from 'react';
+import { generateLetterAvatarSvg, deleteUserAccount } from '../services/db.js';
 
 export default function Profile({ user, onUpdateProfile }) {
   const [form, setForm] = useState({
-    name: user.name || '',
-    email: user.email || '',
-    age: user.age || 25,
-    weight: user.weight || 65,
-    height: user.height || 170,
-    fitness_level: user.fitness_level || 'Intermediate',
-    bio: user.bio || '',
-    avatar: user.avatar || generateLetterAvatarSvg(user.name || 'U', user.role === 'gym_master')
+    name: user?.name || '',
+    email: user?.email || '',
+    age: user?.age || 25,
+    weight: user?.weight || 65,
+    height: user?.height || 170,
+    fitness_level: user?.fitness_level || 'Intermediate',
+    bio: user?.bio || '',
+    avatar: user?.avatar || generateLetterAvatarSvg(user?.name || 'U', user?.role)
   });
 
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (user) {
+      setForm({
+        name: user.name || '',
+        email: user.email || '',
+        age: user.age || 25,
+        weight: user.weight || 65,
+        height: user.height || 170,
+        fitness_level: user.fitness_level || 'Intermediate',
+        bio: user.bio || '',
+        avatar: user.avatar || generateLetterAvatarSvg(user.name || 'U', user.role)
+      });
+    }
+  }, [user?.user_id]);
 
   const handleChange = (field) => (e) => {
     setForm((f) => ({ ...f, [field]: e.target.value }));
@@ -47,7 +62,7 @@ export default function Profile({ user, onUpdateProfile }) {
   };
 
   const handleResetToLetterAvatar = () => {
-    const letterAvatar = generateLetterAvatarSvg(form.name || 'U', user.role === 'gym_master');
+    const letterAvatar = generateLetterAvatarSvg(form.name || 'U', user?.role);
     setForm((f) => ({ ...f, avatar: letterAvatar }));
     setSaved(false);
   };
@@ -69,7 +84,7 @@ export default function Profile({ user, onUpdateProfile }) {
       height: Number(form.height) || 170
     };
 
-    onUpdateProfile(patch);
+    onUpdateProfile(user?.user_id, patch);
     setSaved(true);
     setError('');
   };
@@ -127,24 +142,46 @@ export default function Profile({ user, onUpdateProfile }) {
       <div className="grid grid-3 gap-4" style={{ display: 'grid', gridTemplateColumns: '300px 1fr', gap: '1.5rem' }}>
         {/* Profile Card & Avatar Actions (Without Presets) */}
         <div className="card text-center p-4" style={{ borderRadius: '16px', border: '1px solid #e2e8f0', background: '#ffffff' }}>
-          <div style={{ position: 'relative', display: 'inline-block', marginBottom: '1rem' }}>
-            <img
-              src={form.avatar || generateLetterAvatarSvg(form.name || 'U', user.role === 'gym_master')}
-              alt={form.name}
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1rem' }}>
+            <div
               style={{
                 width: 110,
                 height: 110,
                 borderRadius: '50%',
-                objectFit: 'cover',
-                border: user.role === 'gym_master' ? '3.5px solid #ca8a04' : '3.5px solid #2563eb',
+                background:
+                  user.role === 'owner' || user.role === 'gym_owner' ? '#d97706' :
+                  user.role === 'dietician' ? '#059669' :
+                  user.role === 'consultant' ? '#7c3aed' :
+                  (user.role === 'gym_master' || user.role === 'admin') ? '#ca8a04' :
+                  '#2563eb',
+                color: '#ffffff',
+                fontWeight: 900,
+                fontSize: '3rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                textTransform: 'uppercase',
+                border:
+                  user.role === 'owner' || user.role === 'gym_owner' ? '3.5px solid #d97706' :
+                  user.role === 'dietician' ? '3.5px solid #059669' :
+                  user.role === 'consultant' ? '3.5px solid #7c3aed' :
+                  (user.role === 'gym_master' || user.role === 'admin') ? '3.5px solid #ca8a04' :
+                  '3.5px solid #2563eb',
                 boxShadow: '0 4px 15px rgba(0,0,0,0.08)'
               }}
-            />
+            >
+              {(form.name || 'U').charAt(0).toUpperCase()}
+            </div>
           </div>
 
           <h3 style={{ fontSize: '1.25rem', fontWeight: 900, margin: 0, color: '#0f172a' }}>{form.name || 'User'}</h3>
           <p style={{ fontSize: '0.8rem', fontWeight: 700, color: '#64748b', margin: '0.2rem 0 1rem 0' }}>
-            {user.role === 'gym_master' ? '👑 GYM MASTER / COACH' : `🏋️ GYM MEMBER • ${form.fitness_level}`}
+            {user.role === 'owner' || user.role === 'gym_owner' ? '👑 GYM OWNER / EXECUTIVE DIRECTOR' :
+             user.role === 'dietician' ? '🥗 GYM DIETICIAN / NUTRITIONIST' :
+             user.role === 'consultant' ? '💼 GYM CONSULTANT / BIOMECHANICS' :
+             (user.role === 'gym_master' || user.role === 'admin') ? '👑 GYM MASTER / COACH' :
+             user.role === 'trainer' ? '🏋️ PERSONAL TRAINER' :
+             `🏋️ GYM MEMBER • ${form.fitness_level}`}
           </p>
 
           <input
@@ -296,6 +333,61 @@ export default function Profile({ user, onUpdateProfile }) {
               </button>
             </div>
           </form>
+
+          {/* DANGER ZONE: ACCOUNT DELETION */}
+          <div
+            style={{
+              marginTop: '1.75rem',
+              padding: '1.25rem',
+              borderRadius: '12px',
+              border: '1px solid rgba(239, 68, 68, 0.3)',
+              background: 'rgba(239, 68, 68, 0.04)'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '12px' }}>
+              <div>
+                <h4 style={{ margin: '0 0 4px 0', fontSize: '0.95rem', fontWeight: 900, color: '#dc2626' }}>
+                  🗑️ Danger Zone: Remove Account
+                </h4>
+                <p style={{ margin: 0, fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>
+                  {user.role === 'owner' || user.role === 'gym_owner'
+                    ? 'Permanently deletes your Gym Owner account and immediately vacates the Gym Owner seat so anyone can register as the new Gym Owner.'
+                    : 'Permanently deletes your account and clears all associated workouts and trackers.'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  if (
+                    window.confirm(
+                      `Are you sure you want to permanently delete your account (${user.name})?${
+                        user.role === 'owner' || user.role === 'gym_owner'
+                          ? '\n\nThis will VACATE the Gym Owner seat so anyone can register as the new Gym Owner.'
+                          : ''
+                      }`
+                    )
+                  ) {
+                    deleteUserAccount(user.user_id);
+                    localStorage.removeItem('sfc_auth_user_id');
+                    window.location.reload();
+                  }
+                }}
+                style={{
+                  padding: '0.65rem 1.15rem',
+                  borderRadius: '8px',
+                  border: 'none',
+                  background: '#ef4444',
+                  color: '#ffffff',
+                  fontWeight: 900,
+                  fontSize: '0.82rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 2px 6px rgba(239, 68, 68, 0.25)'
+                }}
+              >
+                {user.role === 'owner' || user.role === 'gym_owner' ? 'Delete Account (Vacate Seat)' : 'Delete Account'}
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

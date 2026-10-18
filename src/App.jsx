@@ -23,6 +23,21 @@ import CommunityLeaderboard from './components/CommunityLeaderboard.jsx';
 import Settings from './components/Settings.jsx';
 import GymMasterPortal from './components/GymMasterPortal.jsx';
 
+// NEW SAAS & SOCIAL MODULES
+import Achievements from './components/Achievements.jsx';
+import Challenges from './components/Challenges.jsx';
+import DailyChallenge from './components/DailyChallenge.jsx';
+import Friends from './components/Friends.jsx';
+import ShareProgressCard from './components/ShareProgressCard.jsx';
+import MessagingSystem from './components/MessagingSystem.jsx';
+import WorkoutTemplates from './components/WorkoutTemplates.jsx';
+import BulkAssignPlans from './components/BulkAssignPlans.jsx';
+import RevenueDashboard from './components/RevenueDashboard.jsx';
+import NotificationCenter from './components/NotificationCenter.jsx';
+import RealTimeAccessHeader from './components/RealTimeAccessHeader.jsx';
+import DieticianPortal from './components/DieticianPortal.jsx';
+
+import { Bell, Sun, Moon } from 'lucide-react';
 import * as db from './services/db.js';
 
 const AUTH_STORAGE_KEY = 'sfc_auth_user_id';
@@ -35,6 +50,21 @@ export default function App() {
     return saved ? Number(saved) : null;
   });
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('sfc_theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('sfc_theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
+
+  const isDark = theme === 'dark';
+
   const refresh = useCallback(() => {
     setTables({
       users: db.getAll('users'),
@@ -43,6 +73,7 @@ export default function App() {
       exercises: db.getAll('exercises'),
       healthTrackers: db.getAll('healthTrackers'),
       devices: db.getAll('devices'),
+      deviceSyncLogs: db.getAll('deviceSyncLogs'),
       nutritionPlans: db.getAll('nutritionPlans'),
       progressReports: db.getAll('progressReports'),
       sleepLogs: db.getAll('sleepLogs'),
@@ -65,8 +96,14 @@ export default function App() {
     setCurrentUserId(user.user_id);
     localStorage.setItem(AUTH_STORAGE_KEY, String(user.user_id));
     db.recordUserLogin(user);
-    if (user.role === 'gym_master') {
+    if (user.role === 'owner' || user.role === 'gym_owner') {
+      setPage('revenue');
+    } else if (user.role === 'gym_master' || user.role === 'admin') {
       setPage('gym-master');
+    } else if (user.role === 'dietician') {
+      setPage('nutrition');
+    } else if (user.role === 'consultant') {
+      setPage('templates');
     } else {
       setPage('dashboard');
     }
@@ -85,15 +122,29 @@ export default function App() {
     localStorage.removeItem(AUTH_STORAGE_KEY);
   };
 
-  if (!tables) return null;
+  const currentUser = tables?.users?.find((u) => u.user_id === currentUserId) || tables?.users?.[0];
 
-  const currentUser = tables.users.find((u) => u.user_id === currentUserId) || tables.users[0];
+  useEffect(() => {
+    const isOwner = currentUser?.role === 'owner' || currentUser?.role === 'gym_owner';
+    if (isOwner && page !== 'revenue') {
+      setPage('revenue');
+    }
+    if (currentUser?.role === 'consultant' && page !== 'templates') {
+      setPage('templates');
+    }
+  }, [currentUser, page]);
+
+  if (!tables) return null;
 
   if (!currentUserId || !currentUser) {
     return <Login onLoginSuccess={handleLoginSuccess} />;
   }
 
   const scoped = (rows) => (rows || []).filter((r) => !r.user_id || r.user_id === currentUserId);
+
+  // Unread Notification Count
+  const uid = currentUser?.user_id || currentUser?.id || 1;
+  const unreadNotifications = (db.getNotifications ? db.getNotifications(uid) : []).filter(n => !(n.is_read || n.isRead)).length;
 
   const planActions = {
     onAddPlan: (payload) => {
@@ -123,29 +174,59 @@ export default function App() {
   };
 
   const renderPage = () => {
+    // Owner role: strictly restricted to monitoring financial criteria and revenue reports only
+    const isOwner = currentUser?.role === 'owner' || currentUser?.role === 'gym_owner';
+    if (isOwner) {
+      return <RevenueDashboard user={currentUser} currentUser={currentUser} onLogout={handleLogout} onRefresh={refresh} />;
+    }
+
+    // Dietician role: restricted to nutrition assignment and profile only
+    const isDietician = currentUser?.role === 'dietician';
+    if (isDietician && page !== 'nutrition' && page !== 'profile') {
+      return null;
+    }
+
+    // Consultant role: restricted strictly to workout templates only
+    const isConsultant = currentUser?.role === 'consultant';
+    if (isConsultant) {
+      return (
+        <WorkoutTemplates
+          user={currentUser}
+          currentUser={currentUser}
+          onRefresh={refresh}
+        />
+      );
+    }
     switch (page) {
       case 'gym-master':
         return (
           <GymMasterPortal
             currentUser={currentUser}
+            user={currentUser}
             allUsers={tables.users}
             fitnessPlans={tables.fitnessPlans}
             workouts={tables.workouts}
+            exercises={tables.exercises}
             healthTrackers={tables.healthTrackers}
             nutritionPlans={tables.nutritionPlans}
             progressReports={tables.progressReports}
             sleepLogs={tables.sleepLogs}
+            devices={tables.devices}
+            deviceSyncLogs={tables.deviceSyncLogs}
             onRefresh={refresh}
+            onNavigate={setPage}
           />
         );
       case 'dashboard':
         return (
           <Dashboard
             user={currentUser}
+            currentUser={currentUser}
             fitnessPlans={scoped(tables.fitnessPlans)}
             workouts={tables.workouts}
             healthTrackers={scoped(tables.healthTrackers)}
             devices={scoped(tables.devices)}
+            deviceSyncLogs={scoped(tables.deviceSyncLogs)}
             progressReports={scoped(tables.progressReports)}
             onNavigate={setPage}
             onAddNutrition={(payload) => {
@@ -159,11 +240,38 @@ export default function App() {
             }}
           />
         );
+      case 'achievements':
+        return <Achievements user={currentUser} currentUser={currentUser} onRefresh={refresh} />;
+      case 'daily-challenge':
+        return <DailyChallenge user={currentUser} currentUser={currentUser} onRefresh={refresh} onNavigate={setPage} />;
+      case 'challenges':
+        return <Challenges user={currentUser} currentUser={currentUser} onRefresh={refresh} onNavigate={setPage} />;
+      case 'friends':
+        return <Friends user={currentUser} currentUser={currentUser} />;
+      case 'share-card':
+        return <ShareProgressCard user={currentUser} currentUser={currentUser} />;
+      case 'messages':
+        return <MessagingSystem user={currentUser} currentUser={currentUser} onRefresh={refresh} />;
+      case 'templates':
+        return <WorkoutTemplates user={currentUser} currentUser={currentUser} onRefresh={refresh} />;
+      case 'bulk-assign':
+        return <BulkAssignPlans user={currentUser} currentUser={currentUser} onRefresh={refresh} />;
+      case 'revenue':
+        return <RevenueDashboard user={currentUser} currentUser={currentUser} onLogout={handleLogout} onRefresh={refresh} />;
+      case 'notifications':
+        return <NotificationCenter user={currentUser} currentUser={currentUser} onNavigate={setPage} />;
       case 'workout-live':
         return (
           <WorkoutLive
             workouts={tables.workouts}
             exercises={tables.exercises}
+            devices={scoped(tables.devices)}
+            deviceSyncLogs={scoped(tables.deviceSyncLogs)}
+            user={currentUser}
+            onAddDeviceSyncLog={(payload) => {
+              db.recordDeviceSyncLog({ user_id: currentUserId, ...payload });
+              refresh();
+            }}
             onCompleteSession={() => {
               db.generateProgressReport(currentUserId);
               refresh();
@@ -218,6 +326,16 @@ export default function App() {
           />
         );
       case 'nutrition':
+        if (isDietician) {
+          return (
+            <DieticianPortal
+              currentUser={currentUser}
+              allUsers={tables.users}
+              nutritionPlans={tables.nutritionPlans}
+              onRefresh={refresh}
+            />
+          );
+        }
         return (
           <NutritionPlan
             plans={scoped(tables.nutritionPlans)}
@@ -319,6 +437,7 @@ export default function App() {
         return (
           <Devices
             devices={scoped(tables.devices)}
+            deviceSyncLogs={scoped(tables.deviceSyncLogs)}
             onAdd={(payload) => {
               db.insert('devices', { user_id: currentUserId, ...payload });
               refresh();
@@ -329,6 +448,18 @@ export default function App() {
             }}
             onToggleSync={(id, current) => {
               db.update('devices', id, { sync_status: current === 'Synced' ? 'Pending' : 'Synced' });
+              refresh();
+            }}
+            onUpdateDevice={(id, patch) => {
+              db.update('devices', id, patch);
+              refresh();
+            }}
+            onAddDeviceSyncLog={(payload) => {
+              db.recordDeviceSyncLog({ user_id: currentUserId, ...payload });
+              refresh();
+            }}
+            onDeleteDeviceSyncLog={(id) => {
+              db.remove('deviceSyncLogs', id);
               refresh();
             }}
           />
@@ -361,9 +492,13 @@ export default function App() {
         return (
           <Profile
             user={currentUser}
-            onUpdateProfile={(id, patch) => {
-              db.updateProfile(id, patch);
-              refresh();
+            onUpdateProfile={(arg1, arg2) => {
+              const userId = (typeof arg1 === 'object' && arg1 !== null) ? currentUser.user_id : arg1;
+              const patch = (typeof arg1 === 'object' && arg1 !== null) ? arg1 : arg2;
+              if (userId && patch) {
+                db.updateProfile(userId, patch);
+                refresh();
+              }
             }}
           />
         );
@@ -382,7 +517,85 @@ export default function App() {
         currentUser={currentUser}
         onLogout={handleLogout}
       />
-      <main className="main">{renderPage()}</main>
+      <main className="main" style={{ position: 'relative', minHeight: '100vh' }}>
+        {/* Top Header Controls: Real-Time Date & Time Access Header + Notifications */}
+        <div style={{
+          position: 'absolute',
+          top: '20px',
+          right: '28px',
+          zIndex: 40,
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <RealTimeAccessHeader user={currentUser} />
+          
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="theme-toggle-btn"
+            style={{
+              width: '36px',
+              height: '36px',
+              borderRadius: '50%',
+              border: isDark ? '1px solid rgba(255, 255, 255, 0.2)' : '1px solid #e2e8f0',
+              background: '#ffffff',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06)',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transition: 'all 0.2s ease',
+              flexShrink: 0
+            }}
+            title={isDark ? "Switch to Light Theme" : "Switch to Dark Theme"}
+            aria-label={isDark ? "Switch to Light Theme" : "Switch to Dark Theme"}
+          >
+            {isDark ? (
+              <Sun size={18} color="#f59e0b" strokeWidth={2.2} />
+            ) : (
+              <Moon size={18} color="#475569" strokeWidth={2.2} />
+            )}
+          </button>
+          
+          {currentUser?.role !== 'consultant' && currentUser?.role !== 'owner' && currentUser?.role !== 'gym_owner' && (
+            <button
+              onClick={() => setPage('notifications')}
+              style={{
+                padding: '7px 12px',
+                background: '#ffffff',
+                border: '1px solid #e2e8f0',
+                borderRadius: '9999px',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                transition: 'all 0.2s ease'
+              }}
+              title="Notifications"
+            >
+              <Bell size={18} color="#475569" />
+              {unreadNotifications > 0 && (
+                <span style={{
+                  background: '#ef4444',
+                  color: '#ffffff',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  borderRadius: '9999px',
+                  padding: '1px 6px',
+                  minWidth: '18px',
+                  textAlign: 'center'
+                }}>
+                  {unreadNotifications}
+                </span>
+              )}
+            </button>
+          )}
+        </div>
+
+        {renderPage()}
+      </main>
     </div>
   );
 }

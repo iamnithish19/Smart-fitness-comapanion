@@ -1145,53 +1145,85 @@ input::placeholder, textarea::placeholder {
 
 .demo-divider {
   display: flex;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  font-family: var(--font-mono);
-  font-size: 10px;
-  color: #94a3b8;
-  letter-spacing: 1px;
+  margin-bottom: 0.85rem;
 }
 
-.demo-divider::before,
-.demo-divider::after {
+.demo-divider-title {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.demo-divider-title::before,
+.demo-divider-title::after {
   content: '';
   flex: 1;
   border-bottom: 1px solid #e2e8f0;
 }
 
-.demo-divider span {
-  padding: 0 10px;
+[data-theme="dark"] .demo-divider-title::before,
+[data-theme="dark"] .demo-divider-title::after {
+  border-bottom-color: rgba(255, 255, 255, 0.12);
 }
 
 .demo-users-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 290px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.demo-users-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.demo-users-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.demo-users-list::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 4px;
 }
 
 .demo-user-btn {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  height: 48px;
+  gap: 0.75rem;
+  min-height: 62px;
+  height: auto;
   background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  padding: 0 14px;
-  border-radius: 10px;
+  border: 1.5px solid #e2e8f0;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .demo-user-btn:hover {
   border-color: #eab308;
   background: #fef9c3;
+  transform: translateY(-1px);
 }
 
 .demo-user-avatar {
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: #eab308;
   color: #ffffff;
@@ -1199,7 +1231,7 @@ input::placeholder, textarea::placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
   flex-shrink: 0;
 }
 
@@ -1207,25 +1239,57 @@ input::placeholder, textarea::placeholder {
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 10px;
+  justify-content: center;
+  margin-left: 0;
+  min-width: 0;
+  gap: 3px;
+}
+
+.demo-user-name-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
 }
 
 .demo-user-name {
-  font-size: 13px;
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 900;
   color: #0f172a;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .demo-user-meta {
-  font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
   color: #64748b;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.demo-user-badges {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 .demo-user-arrow {
   color: #ca8a04;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 18px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 4px;
 }
 
 /* Helper Utilities */
@@ -1373,4 +1437,217 @@ input::placeholder, textarea::placeholder {
   border: 1px solid #e2e8f0;
   flex-shrink: 0;
 }
+
+/* Web Bluetooth Scanner & Badge Styles */
+.ble-banner {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(59, 130, 246, 0.12) 100%);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .ble-banner {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.12) 0%, rgba(59, 130, 246, 0.2) 100%);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+.ble-pulse-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #3b82f6;
+  color: white;
+  font-size: 22px;
+  position: relative;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+}
+
+.ble-pulse-icon.scanning::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: -6px;
+  right: -6px;
+  bottom: -6px;
+  border-radius: 50%;
+  border: 2px solid #3b82f6;
+  animation: pulse-radar 1.5s infinite ease-out;
+}
+
+@keyframes pulse-radar {
+  0% {
+    transform: scale(0.9);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+.ble-badge {
+  background: linear-gradient(90deg, #2563eb, #0284c7);
+  color: #ffffff !important;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 8px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.ble-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #22c55e;
+  display: inline-block;
+  animation: ble-blink 1.2s infinite alternate;
+}
+
+@keyframes ble-blink {
+  from { opacity: 0.4; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1.1); }
+}
+
+/* Battery & Live Watch Status Styles */
+.battery-meter-container {
+  background: var(--panel-alt);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 8px 12px;
+  margin-top: 10px;
+}
+
+.battery-meter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+
+.battery-track {
+  width: 100%;
+  height: 8px;
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.battery-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.3s ease;
+}
+
+.battery-fill.charging {
+  background: linear-gradient(90deg, #22c55e, #10b981, #06b6d4) !important;
+  background-size: 200% 200%;
+  animation: battery-charge-flow 2s infinite linear;
+}
+
+@keyframes battery-charge-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.watch-status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.watch-status-badge.connected {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+[data-theme="dark"] .watch-status-badge.connected {
+  color: #4ade80;
+}
+
+.watch-status-badge.charging {
+  background: rgba(14, 165, 233, 0.15);
+  color: #0284c7;
+  border: 1px solid rgba(14, 165, 233, 0.3);
+}
+
+[data-theme="dark"] .watch-status-badge.charging {
+  color: #38bdf8;
+}
+
+.watch-status-badge.disconnected {
+  background: rgba(239, 68, 68, 0.15);
+  color: #dc2626;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+[data-theme="dark"] .watch-status-badge.disconnected {
+  color: #f87171;
+}
+
+.watch-status-badge.syncing {
+  background: rgba(234, 179, 8, 0.15);
+  color: #ca8a04;
+  border: 1px solid rgba(234, 179, 8, 0.3);
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 460px;
+  padding: 24px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Live Time & Date Pill Header Control */
+.live-time-pill {
+  transition: all 0.2s ease !important;
+}
+
+.live-time-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15) !important;
+  border-color: #bfdbfe !important;
+}
+
+
 

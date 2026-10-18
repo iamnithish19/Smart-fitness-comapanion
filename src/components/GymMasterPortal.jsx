@@ -1,19 +1,52 @@
 import React, { useState } from 'react';
 import * as db from '../services/db.js';
+import RevenueDashboard from './RevenueDashboard.jsx';
+import BulkAssignPlans from './BulkAssignPlans.jsx';
+import WorkoutTemplates from './WorkoutTemplates.jsx';
+import MessagingSystem from './MessagingSystem.jsx';
+import Challenges from './Challenges.jsx';
 
-export default function GymMasterPortal({ currentUser, allUsers, fitnessPlans, workouts, healthTrackers, nutritionPlans, progressReports, sleepLogs, onRefresh }) {
+export default function GymMasterPortal({
+  currentUser,
+  allUsers = [],
+  fitnessPlans = [],
+  workouts = [],
+  exercises = [],
+  healthTrackers = [],
+  nutritionPlans = [],
+  progressReports = [],
+  sleepLogs = [],
+  devices = [],
+  deviceSyncLogs = [],
+  onRefresh,
+  activeTab: externalTab,
+  onNavigate
+}) {
+  const [activeTab, setActiveTab] = useState(externalTab || 'dashboard');
+  const isOwner = currentUser?.role === 'owner' || currentUser?.role === 'gym_owner';
   const [search, setSearch] = useState('');
   const [filterLevel, setFilterLevel] = useState('All');
-  
+  const [filterProgress, setFilterProgress] = useState('All');
+
   // Modals state
   const [selectedMember, setSelectedMember] = useState(null);
+  const [viewingProgressMember, setViewingProgressMember] = useState(null);
   const [showPlanModal, setShowPlanModal] = useState(false);
+  const [showExerciseModal, setShowExerciseModal] = useState(false);
   const [showNutritionModal, setShowNutritionModal] = useState(false);
+
+  // Form states for Single Exercise Assignment
+  const [exerciseName, setExerciseName] = useState('');
+  const [exerciseCategory, setExerciseCategory] = useState('Chest / Upper Body');
+  const [exerciseSets, setExerciseSets] = useState(3);
+  const [exerciseReps, setExerciseReps] = useState('12');
+  const [exerciseTargetWorkout, setExerciseTargetWorkout] = useState('');
 
   // Form states for Plan Assignment
   const [planName, setPlanName] = useState('');
   const [workoutType, setWorkoutType] = useState('Power Hypertrophy Routine');
   const [durationMinutes, setDurationMinutes] = useState(45);
+  const [customExerciseLines, setCustomExerciseLines] = useState('Barbell Bench Press, 4, 10\nIncline Dumbbell Flyes, 3, 12\nTricep Rope Pushdowns, 3, 15');
 
   // Form states for Nutrition Assignment
   const [dietType, setDietType] = useState('High Protein Athlete');
@@ -25,7 +58,14 @@ export default function GymMasterPortal({ currentUser, allUsers, fitnessPlans, w
   const [notification, setNotification] = useState('');
 
   const members = (allUsers || []).filter((u) => u.role !== 'gym_master');
-  const analytics = db.getGymAnalytics();
+  const trainers = (allUsers || []).filter((u) => u.role === 'trainer');
+  const analytics = db.getGymAnalytics ? db.getGymAnalytics() : {
+    totalMembers: members.length,
+    totalActivePlans: fitnessPlans.length,
+    totalWorkouts: workouts.length,
+    avgCompletionRate: 82,
+    totalGymSteps: 125000
+  };
 
   const showToast = (msg) => {
     setNotification(msg);
@@ -33,23 +73,71 @@ export default function GymMasterPortal({ currentUser, allUsers, fitnessPlans, w
   };
 
   const filteredMembers = members.filter((m) => {
-    const matchesSearch = (m.name || '').toLowerCase().includes(search.toLowerCase()) ||
-                          (m.email || '').toLowerCase().includes(search.toLowerCase());
+    const matchesSearch =
+      (m.name || '').toLowerCase().includes(search.toLowerCase()) ||
+      (m.email || '').toLowerCase().includes(search.toLowerCase());
     const matchesLevel = filterLevel === 'All' || m.fitness_level === filterLevel;
-    return matchesSearch && matchesLevel;
+
+    const userReport = (progressReports || []).filter((pr) => pr.user_id === m.user_id).slice(-1)[0];
+    const comp = userReport ? userReport.completion_percentage : 50;
+    let matchesProgress = true;
+    if (filterProgress === 'high') matchesProgress = comp >= 75;
+    if (filterProgress === 'medium') matchesProgress = comp >= 40 && comp < 75;
+    if (filterProgress === 'low') matchesProgress = comp < 40;
+
+    return matchesSearch && matchesLevel && matchesProgress;
   });
 
+  // Handle assigning an exercise
+  const handleAssignExercise = (e) => {
+    e.preventDefault();
+    if (!selectedMember || !exerciseName.trim()) return;
+
+    db.assignExerciseToMember(selectedMember.user_id, {
+      name: exerciseName.trim(),
+      sets: exerciseSets,
+      reps: exerciseReps,
+      workoutType: exerciseTargetWorkout || `${exerciseCategory} Routine`
+    });
+
+    showToast(`💪 Exercise "${exerciseName}" assigned to ${selectedMember.name}!`);
+    setShowExerciseModal(false);
+    setExerciseName('');
+    if (onRefresh) onRefresh();
+  };
+
+  // Handle assigning a full workout plan
   const handleAssignPlan = (e) => {
     e.preventDefault();
     if (!selectedMember || !planName.trim()) return;
 
-    db.assignPlanToMember(selectedMember.user_id, planName.trim(), workoutType, durationMinutes);
+    const parsedExercises = customExerciseLines
+      .split('\n')
+      .filter((l) => l.trim())
+      .map((l) => {
+        const parts = l.split(',');
+        return {
+          name: parts[0]?.trim() || 'Exercise',
+          sets: Number(parts[1]?.trim()) || 3,
+          reps: parts[2]?.trim() || '10'
+        };
+      });
+
+    db.assignPlanToMember(
+      selectedMember.user_id,
+      planName.trim(),
+      workoutType,
+      durationMinutes,
+      parsedExercises
+    );
+
     showToast(`✅ Workout plan "${planName}" assigned to ${selectedMember.name}!`);
     setShowPlanModal(false);
     setPlanName('');
-    onRefresh();
+    if (onRefresh) onRefresh();
   };
 
+  // Handle nutrition assignment
   const handleAssignNutrition = (e) => {
     e.preventDefault();
     if (!selectedMember) return;
@@ -63,92 +151,142 @@ export default function GymMasterPortal({ currentUser, allUsers, fitnessPlans, w
     });
     showToast(`🥗 Nutrition targets updated for ${selectedMember.name}!`);
     setShowNutritionModal(false);
-    onRefresh();
+    if (onRefresh) onRefresh();
   };
 
+  const allTabItems = [
+    { id: 'dashboard', label: 'Dashboard Overview', icon: '📊' },
+    { id: 'members', label: 'Member Progress & Roster', icon: '👥', count: members.length },
+    { id: 'trainers', label: 'Trainers', icon: '🧑‍🏫', count: trainers.length },
+    ...(isOwner ? [{ id: 'revenue', label: 'Financials & Revenue', icon: '📈' }] : []),
+    { id: 'templates', label: 'Workout Templates', icon: '📋' },
+    { id: 'bulk-assign', label: 'Bulk Assign Routine', icon: '⚡' },
+    { id: 'challenges', label: 'Gym Challenges', icon: '⚔️' },
+    { id: 'messages', label: 'Member Messages', icon: '💬' }
+  ];
+  const tabItems = allTabItems;
+
+  const quickExercises = [
+    { name: 'Barbell Bench Press', cat: 'Chest', sets: 4, reps: 10 },
+    { name: 'Incline Dumbbell Press', cat: 'Chest', sets: 3, reps: 12 },
+    { name: 'Barbell Back Squats', cat: 'Legs', sets: 4, reps: 8 },
+    { name: 'Romanian Deadlifts', cat: 'Legs/Glutes', sets: 3, reps: 10 },
+    { name: 'Lat Pulldowns', cat: 'Back', sets: 4, reps: 10 },
+    { name: 'Overhead Shoulder Press', cat: 'Shoulders', sets: 3, reps: 12 },
+    { name: 'Hanging Leg Raises', cat: 'Core', sets: 3, reps: 15 },
+    { name: 'Dumbbell Bicep Curls', cat: 'Arms', sets: 3, reps: 12 }
+  ];
+
   return (
-    <div className="gym-master-portal p-6" style={{ padding: '2rem', background: '#f8fafc', minHeight: '100vh', color: '#0f172a' }}>
+    <div className="page-container" style={{ padding: '24px 28px', maxWidth: '1400px', margin: '0 auto' }}>
       {/* Toast Notification */}
       {notification && (
         <div
           style={{
             position: 'fixed',
-            top: '20px',
-            right: '20px',
-            background: '#ca8a04',
+            top: '24px',
+            right: '24px',
+            background: 'linear-gradient(135deg, #ca8a04 0%, #a16207 100%)',
             color: '#ffffff',
-            padding: '1rem 1.5rem',
-            borderRadius: '12px',
+            padding: '14px 22px',
+            borderRadius: '14px',
             fontWeight: 800,
-            zIndex: 9999,
-            boxShadow: '0 10px 25px rgba(202, 138, 4, 0.3)'
+            fontSize: '14px',
+            zIndex: 99999,
+            boxShadow: '0 12px 28px rgba(202, 138, 4, 0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px'
           }}
         >
-          {notification}
+          <span>✨</span>
+          <span>{notification}</span>
         </div>
       )}
 
-      {/* Top Banner Header (Light Theme) */}
+      {/* 1. TOP GYM MASTER HERO BANNER */}
       <div
-        className="master-banner mb-6"
+        className="card"
         style={{
-          background: 'linear-gradient(135deg, #fef9c3 0%, #ffffff 100%)',
-          border: '1px solid #fef08a',
-          borderRadius: '16px',
-          padding: '2rem',
+          background: 'linear-gradient(135deg, #ffffff 0%, #fefce8 100%)',
+          border: '1.5px solid #fef08a',
+          borderRadius: '20px',
+          padding: '24px 28px',
+          marginBottom: '24px',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
-          gap: '1.5rem',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.03)'
+          gap: '20px',
+          boxShadow: '0 4px 20px rgba(234, 179, 8, 0.08)'
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '18px' }}>
           <div
             style={{
-              width: '72px',
-              height: '72px',
-              borderRadius: '50%',
-              overflow: 'hidden',
-              border: '3px solid #ca8a04',
-              boxShadow: '0 4px 12px rgba(202, 138, 4, 0.2)'
+              width: '64px',
+              height: '64px',
+              borderRadius: '16px',
+              background: 'linear-gradient(135deg, #eab308 0%, #ca8a04 100%)',
+              color: '#ffffff',
+              fontSize: '28px',
+              fontWeight: 900,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              boxShadow: '0 6px 16px rgba(234, 179, 8, 0.3)',
+              border: '2px solid #ffffff'
             }}
           >
-            <img
-              src={currentUser.avatar || 'https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=250&q=80'}
-              alt={currentUser.name}
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+            {(currentUser?.name || 'M').charAt(0).toUpperCase()}
           </div>
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <h1 style={{ fontSize: '1.75rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-                {currentUser.name}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <h1 style={{ fontSize: '24px', fontWeight: 900, margin: 0, color: '#0f172a' }}>
+                {currentUser?.name || 'Coach Marcus Vance'}
               </h1>
               <span
                 style={{
-                  background: '#ca8a04',
+                  background: '#eab308',
                   color: '#ffffff',
-                  padding: '0.2rem 0.6rem',
-                  borderRadius: '6px',
-                  fontSize: '0.75rem',
+                  padding: '3px 10px',
+                  borderRadius: '8px',
+                  fontSize: '11px',
                   fontWeight: 900,
-                  textTransform: 'uppercase'
+                  letterSpacing: '0.05em'
                 }}
               >
-                👑 GYM MASTER / COACH
+                👑 GYM MASTER PORTAL
               </span>
             </div>
-            <p style={{ color: '#475569', margin: '0.25rem 0 0 0', fontSize: '0.9rem', fontWeight: 600 }}>
-              {currentUser.gym_name || 'Iron Forge Performance Gym'} • {currentUser.specialty || 'Head Performance Coach'}
+            <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748b', fontWeight: 600 }}>
+              {currentUser?.gym_name || 'Iron Forge Elite Gym'} • {currentUser?.specialty || 'Head Strength & Conditioning Coach'}
             </p>
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
           <button
             className="btn"
+            onClick={() => {
+              if (members.length) {
+                setSelectedMember(members[0]);
+                setShowExerciseModal(true);
+              }
+            }}
+            style={{
+              background: '#2563eb',
+              color: '#ffffff',
+              boxShadow: '0 3px 10px rgba(37, 99, 235, 0.25)',
+              padding: '0 18px',
+              height: '42px',
+              borderRadius: '10px'
+            }}
+          >
+            💪 + Assign Exercise
+          </button>
+          <button
+            className="btn btn-primary"
             onClick={() => {
               if (members.length) {
                 setSelectedMember(members[0]);
@@ -156,635 +294,1159 @@ export default function GymMasterPortal({ currentUser, allUsers, fitnessPlans, w
               }
             }}
             style={{
-              background: '#ca8a04',
-              color: '#ffffff',
-              fontWeight: 800,
-              padding: '0.75rem 1.25rem',
-              borderRadius: '10px',
-              border: 'none',
-              cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(202, 138, 4, 0.2)'
+              padding: '0 18px',
+              height: '42px',
+              borderRadius: '10px'
             }}
           >
-            ➕ Assign New Plan
+            📋 + Assign Full Routine
           </button>
         </div>
       </div>
 
-      {/* Analytics Overview Cards */}
-      <div
-        className="analytics-grid mb-6"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-          gap: '1.25rem'
-        }}
-      >
-        <div
-          className="stat-card"
-          style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '14px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-          }}
-        >
-          <div style={{ color: '#64748b', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 800 }}>
-            🏋️ ACTIVE GYM MEMBERS
-          </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#2563eb', marginTop: '0.5rem' }}>
-            {analytics.totalMembers}
-          </div>
-          <div style={{ fontSize: '0.8rem', color: '#16a34a', fontWeight: 700, marginTop: '0.25rem' }}>
-            ● All accounts registered & active
-          </div>
-        </div>
-
-        <div
-          className="stat-card"
-          style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '14px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-          }}
-        >
-          <div style={{ color: '#64748b', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 800 }}>
-            📋 ACTIVE WORKOUT PLANS
-          </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#ca8a04', marginTop: '0.5rem' }}>
-            {analytics.totalActivePlans}
-          </div>
-          <div style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600, marginTop: '0.25rem' }}>
-            {analytics.totalWorkouts} total routines assigned
-          </div>
-        </div>
-
-        <div
-          className="stat-card"
-          style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '14px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-          }}
-        >
-          <div style={{ color: '#64748b', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 800 }}>
-            📈 AVG MEMBER PROGRESS
-          </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#16a34a', marginTop: '0.5rem' }}>
-            {analytics.avgCompletionRate}%
-          </div>
-          <div style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600, marginTop: '0.25rem' }}>
-            Based on completed report milestones
-          </div>
-        </div>
-
-        <div
-          className="stat-card"
-          style={{
-            background: '#ffffff',
-            border: '1px solid #e2e8f0',
-            borderRadius: '14px',
-            padding: '1.5rem',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.03)'
-          }}
-        >
-          <div style={{ color: '#64748b', fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 800 }}>
-            🔥 TOTAL GYM ACTIVITY
-          </div>
-          <div style={{ fontSize: '2.2rem', fontWeight: 900, color: '#dc2626', marginTop: '0.5rem' }}>
-            {analytics.totalGymSteps.toLocaleString()}
-          </div>
-          <div style={{ fontSize: '0.8rem', color: '#475569', fontWeight: 600, marginTop: '0.25rem' }}>
-            Combined member step activity
-          </div>
-        </div>
-      </div>
-
-      {/* Member Management Roster Header */}
+      {/* 2. TAB NAVIGATION BAR */}
       <div
         style={{
           display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: '1.5rem',
-          flexWrap: 'wrap',
-          gap: '1rem'
+          gap: '8px',
+          overflowX: 'auto',
+          paddingBottom: '8px',
+          marginBottom: '24px',
+          borderBottom: '1px solid #e2e8f0'
         }}
       >
-        <div>
-          <h2 style={{ fontSize: '1.35rem', fontWeight: 900, color: '#0f172a', margin: 0 }}>
-            🏋️ Member Management Roster
-          </h2>
-          <p style={{ color: '#475569', fontSize: '0.85rem', margin: '0.2rem 0 0 0', fontWeight: 500 }}>
-            Select any member to assign customized workout plans, update nutrition, or audit vitals.
-          </p>
-        </div>
-
-        {/* Filters & Search */}
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <input
-            type="text"
-            placeholder="🔍 Search member name or email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            style={{
-              background: '#ffffff',
-              border: '1px solid #cbd5e1',
-              borderRadius: '8px',
-              padding: '0.55rem 1rem',
-              color: '#0f172a',
-              fontSize: '0.85rem',
-              width: '240px'
-            }}
-          />
-
-          <select
-            value={filterLevel}
-            onChange={(e) => setFilterLevel(e.target.value)}
-            style={{
-              background: '#ffffff',
-              border: '1px solid #cbd5e1',
-              borderRadius: '8px',
-              padding: '0.55rem 1rem',
-              color: '#0f172a',
-              fontSize: '0.85rem'
-            }}
-          >
-            <option value="All">All Levels</option>
-            <option value="Beginner">Beginner</option>
-            <option value="Intermediate">Intermediate</option>
-            <option value="Advanced">Advanced</option>
-          </select>
-        </div>
-      </div>
-
-      {/* Member Cards Grid */}
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
-          gap: '1.25rem'
-        }}
-      >
-        {filteredMembers.map((m) => {
-          const userPlans = (fitnessPlans || []).filter((p) => p.user_id === m.user_id);
-          const userVitals = (healthTrackers || []).filter((h) => h.user_id === m.user_id).slice(-1)[0];
-          const userNutri = (nutritionPlans || []).filter((n) => n.user_id === m.user_id).slice(-1)[0];
-          const userReport = (progressReports || []).filter((pr) => pr.user_id === m.user_id).slice(-1)[0];
-
+        {tabItems.map((tab) => {
+          const isActive = activeTab === tab.id;
           return (
-            <div
-              key={m.user_id}
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
               style={{
-                background: '#ffffff',
-                border: '1px solid #e2e8f0',
-                borderRadius: '14px',
-                padding: '1.25rem',
                 display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                boxShadow: '0 2px 8px rgba(0,0,0,0.03)',
-                transition: 'all 0.2s ease-in-out'
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 18px',
+                borderRadius: '12px',
+                border: isActive ? '1px solid #ca8a04' : '1px solid #e2e8f0',
+                background: isActive ? '#eab308' : '#ffffff',
+                color: isActive ? '#ffffff' : '#475569',
+                fontWeight: 800,
+                fontSize: '13px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease',
+                boxShadow: isActive ? '0 3px 10px rgba(234, 179, 8, 0.3)' : '0 1px 3px rgba(0,0,0,0.02)'
               }}
             >
-              <div>
-                {/* Member Profile Row */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
-                  <div
-                    style={{
-                      width: '52px',
-                      height: '52px',
-                      borderRadius: '50%',
-                      overflow: 'hidden',
-                      border: '2px solid #2563eb'
-                    }}
-                  >
-                    <img
-                      src={m.avatar || `https://api.dicebear.com/7.x/bottts/svg?seed=${m.name}`}
-                      alt={m.name}
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    />
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    {/* BOLD BLACK MEMBER NAME */}
-                    <div style={{ fontWeight: 900, fontSize: '1.1rem', color: '#000000' }}>{m.name}</div>
-                    <div style={{ fontSize: '0.75rem', color: '#475569', fontWeight: 500 }}>{m.email}</div>
-                    <span
-                      style={{
-                        fontSize: '0.68rem',
-                        padding: '0.15rem 0.5rem',
-                        borderRadius: '4px',
-                        background: '#dbeafe',
-                        color: '#1e40af',
-                        fontWeight: 800,
-                        marginTop: '0.2rem',
-                        display: 'inline-block'
-                      }}
-                    >
-                      {m.fitness_level || 'Member'} • {m.age} yrs • {m.weight} kg
-                    </span>
-                  </div>
-                </div>
-
-                {/* Member Metrics summary */}
-                <div
+              <span>{tab.icon}</span>
+              <span>{tab.label}</span>
+              {tab.count !== undefined && (
+                <span
                   style={{
-                    background: '#f8fafc',
-                    borderRadius: '8px',
-                    border: '1px solid #e2e8f0',
-                    padding: '0.75rem',
-                    marginBottom: '1rem',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '0.5rem',
-                    fontSize: '0.8rem'
+                    background: isActive ? 'rgba(255,255,255,0.25)' : '#f1f5f9',
+                    color: isActive ? '#ffffff' : '#64748b',
+                    padding: '2px 8px',
+                    borderRadius: '12px',
+                    fontSize: '11px',
+                    fontWeight: 900
                   }}
                 >
-                  <div>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Latest Heart Rate:</span>
-                    <div style={{ fontWeight: 900, color: '#dc2626' }}>
-                      {userVitals ? `❤️ ${userVitals.heart_rate} BPM` : 'N/A'}
-                    </div>
-                  </div>
-                  <div>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Daily Steps:</span>
-                    <div style={{ fontWeight: 900, color: '#16a34a' }}>
-                      {userVitals ? `👟 ${userVitals.steps.toLocaleString()}` : '0 steps'}
-                    </div>
-                  </div>
-                  <div>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Active Plans:</span>
-                    <div style={{ fontWeight: 900, color: '#ca8a04' }}>
-                      {userPlans.length ? `${userPlans.length} Active` : 'None'}
-                    </div>
-                  </div>
-                  <div>
-                    <span style={{ color: '#64748b', fontWeight: 600 }}>Target Calories:</span>
-                    <div style={{ fontWeight: 900, color: '#2563eb' }}>
-                      {userNutri ? `🥗 ${userNutri.daily_calories} kcal` : 'Unassigned'}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Completion Bar */}
-                {userReport && (
-                  <div style={{ marginBottom: '1rem' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.75rem', color: '#475569', marginBottom: '0.25rem', fontWeight: 600 }}>
-                      <span>Report Progress Score</span>
-                      <span style={{ fontWeight: 900, color: '#16a34a' }}>{userReport.completion_percentage}%</span>
-                    </div>
-                    <div style={{ width: '100%', height: '6px', background: '#e2e8f0', borderRadius: '3px', overflow: 'hidden' }}>
-                      <div style={{ width: `${userReport.completion_percentage}%`, height: '100%', background: 'linear-gradient(90deg, #2563eb, #16a34a)', borderRadius: '3px' }} />
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Action Buttons for Master */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <button
-                  onClick={() => {
-                    setSelectedMember(m);
-                    setShowPlanModal(true);
-                  }}
-                  style={{
-                    background: '#fef9c3',
-                    border: '1px solid #fef08a',
-                    color: '#854d0e',
-                    padding: '0.65rem 0.5rem',
-                    borderRadius: '8px',
-                    fontSize: '0.78rem',
-                    fontWeight: 900,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.35rem',
-                    textAlign: 'center'
-                  }}
-                >
-                  📋 Assign Workout
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedMember(m);
-                    setShowNutritionModal(true);
-                  }}
-                  style={{
-                    background: '#dbeafe',
-                    border: '1px solid #bfdbfe',
-                    color: '#1e40af',
-                    padding: '0.65rem 0.5rem',
-                    borderRadius: '8px',
-                    fontSize: '0.78rem',
-                    fontWeight: 900,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: '0.35rem',
-                    textAlign: 'center'
-                  }}
-                >
-                  🥗 Assign Nutrition
-                </button>
-              </div>
-            </div>
+                  {tab.count}
+                </span>
+              )}
+            </button>
           );
         })}
       </div>
 
-      {/* PLAN ASSIGNMENT MODAL (LIGHT THEME) */}
-      {showPlanModal && selectedMember && (
+      {/* TAB CONTENT: FINANCIALS — Owner Only */}
+      {activeTab === 'revenue' && isOwner && <RevenueDashboard user={currentUser} />}
+
+      {/* TAB CONTENT: TEMPLATES */}
+      {activeTab === 'templates' && <WorkoutTemplates currentUser={currentUser} onRefresh={onRefresh} />}
+
+      {/* TAB CONTENT: BULK ASSIGN */}
+      {activeTab === 'bulk-assign' && <BulkAssignPlans currentUser={currentUser} onRefresh={onRefresh} />}
+
+      {/* TAB CONTENT: MESSAGES */}
+      {activeTab === 'messages' && <MessagingSystem user={currentUser} currentUser={currentUser} onRefresh={onRefresh} />}
+
+      {/* TAB CONTENT: CHALLENGES */}
+      {activeTab === 'challenges' && <Challenges user={currentUser} currentUser={currentUser} onRefresh={onRefresh} />}
+
+      {/* TAB CONTENT: TRAINERS */}
+      {activeTab === 'trainers' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h2 style={{ fontSize: '20px', fontWeight: 900, margin: 0 }}>Gym Coaching Staff ({trainers.length})</h2>
+              <p style={{ margin: '2px 0 0', fontSize: '13px', color: '#64748b' }}>Assigned coaches managing member workout programs</p>
+            </div>
+          </div>
+          <div className="grid grid-3" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+            {trainers.map((trainer) => (
+              <div key={trainer.user_id || trainer.id} className="card p-4" style={{ borderRadius: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+                  <div style={{ width: '44px', height: '44px', borderRadius: '12px', background: '#2563eb', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, fontSize: '18px' }}>
+                    {(trainer.name || 'T').charAt(0)}
+                  </div>
+                  <div>
+                    <strong style={{ display: 'block', fontSize: '15px' }}>{trainer.name}</strong>
+                    <span style={{ fontSize: '12px', color: '#2563eb', fontWeight: 700 }}>{trainer.specialty || 'Fitness Trainer'}</span>
+                  </div>
+                </div>
+                <div style={{ fontSize: '12px', color: '#64748b', background: '#f8fafc', padding: '10px', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
+                  <div>Email: <strong style={{ color: '#0f172a' }}>{trainer.email}</strong></div>
+                  <div style={{ marginTop: '4px', color: '#16a34a', fontWeight: 800 }}>● Active Certified Trainer</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* TAB CONTENT: DASHBOARD & MEMBER PROGRESS (DEFAULT) */}
+      {(activeTab === 'dashboard' || activeTab === 'members') && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          {/* 3. FOUR KPI STAT CARDS */}
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+              gap: '16px'
+            }}
+          >
+            {/* Stat 1 */}
+            <div
+              className="card"
+              style={{
+                borderRadius: '16px',
+                padding: '18px 20px',
+                border: '1px solid #e2e8f0',
+                background: '#ffffff',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  TOTAL GYM MEMBERS
+                </span>
+                <span style={{ fontSize: '20px' }}>👥</span>
+              </div>
+              <div style={{ fontSize: '32px', fontWeight: 900, color: '#2563eb', margin: '6px 0 2px' }}>
+                {analytics.totalMembers}
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#16a34a' }}>
+                ✓ 100% Active Profiles
+              </div>
+            </div>
+
+            {/* Stat 2 */}
+            <div
+              className="card"
+              style={{
+                borderRadius: '16px',
+                padding: '18px 20px',
+                border: '1px solid #fef08a',
+                background: '#fefce8',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', fontWeight: 900, color: '#854d0e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  ACTIVE ROUTINES
+                </span>
+                <span style={{ fontSize: '20px' }}>🏋️</span>
+              </div>
+              <div style={{ fontSize: '32px', fontWeight: 900, color: '#ca8a04', margin: '6px 0 2px' }}>
+                {analytics.totalActivePlans}
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#854d0e' }}>
+                {analytics.totalWorkouts || workouts.length} configured plans
+              </div>
+            </div>
+
+            {/* Stat 3 */}
+            <div
+              className="card"
+              style={{
+                borderRadius: '16px',
+                padding: '18px 20px',
+                border: '1px solid #e2e8f0',
+                background: '#ffffff',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  AVG PROGRESS SCORE
+                </span>
+                <span style={{ fontSize: '20px' }}>📊</span>
+              </div>
+              <div style={{ fontSize: '32px', fontWeight: 900, color: '#16a34a', margin: '6px 0 2px' }}>
+                {analytics.avgCompletionRate}%
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b' }}>
+                Member target completion rate
+              </div>
+            </div>
+
+            {/* Stat 4 */}
+            <div
+              className="card"
+              style={{
+                borderRadius: '16px',
+                padding: '18px 20px',
+                border: '1px solid #e2e8f0',
+                background: '#ffffff',
+                boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '11px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                  TOTAL GYM STEPS
+                </span>
+                <span style={{ fontSize: '20px' }}>🔥</span>
+              </div>
+              <div style={{ fontSize: '32px', fontWeight: 900, color: '#e11d48', margin: '6px 0 2px' }}>
+                {analytics.totalGymSteps.toLocaleString()}
+              </div>
+              <div style={{ fontSize: '12px', fontWeight: 700, color: '#64748b' }}>
+                Smart tracker synced total
+              </div>
+            </div>
+          </div>
+
+          {/* 4. MEMBER PROGRESS & ROSTER DIRECTORY */}
+          <div
+            className="card"
+            style={{
+              borderRadius: '20px',
+              padding: '24px',
+              border: '1px solid #e2e8f0',
+              background: '#ffffff'
+            }}
+          >
+            {/* Header & Filter Controls Bar */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '16px',
+                paddingBottom: '18px',
+                borderBottom: '1px solid #f1f5f9',
+                marginBottom: '20px'
+              }}
+            >
+              <div>
+                <h2 style={{ fontSize: '18px', fontWeight: 900, margin: 0, color: '#0f172a' }}>
+                  Member Progress & Direct Routine Management
+                </h2>
+                <p style={{ margin: '3px 0 0 0', fontSize: '13px', color: '#64748b' }}>
+                  Track individual progress, vital readings, active routines, and assign new exercises directly.
+                </p>
+              </div>
+
+              {/* Search & Filter Inputs */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                <div style={{ position: 'relative' }}>
+                  <input
+                    type="text"
+                    placeholder="🔍 Search member name or email..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    style={{
+                      padding: '9px 14px',
+                      borderRadius: '10px',
+                      border: '1px solid #cbd5e1',
+                      fontSize: '13px',
+                      width: '240px',
+                      fontWeight: 700
+                    }}
+                  />
+                </div>
+
+                <select
+                  value={filterLevel}
+                  onChange={(e) => setFilterLevel(e.target.value)}
+                  style={{
+                    padding: '9px 12px',
+                    borderRadius: '10px',
+                    border: '1px solid #cbd5e1',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="All">All Fitness Tiers</option>
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+
+                <select
+                  value={filterProgress}
+                  onChange={(e) => setFilterProgress(e.target.value)}
+                  style={{
+                    padding: '9px 12px',
+                    borderRadius: '10px',
+                    border: '1px solid #cbd5e1',
+                    fontSize: '13px',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  <option value="All">All Progress Rates</option>
+                  <option value="high">High Progress (≥ 75%)</option>
+                  <option value="medium">Moderate (40 - 74%)</option>
+                  <option value="low">Needs Attention (&lt; 40%)</option>
+                </select>
+              </div>
+            </div>
+
+            {/* MEMBER CARDS GRID */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+                gap: '20px'
+              }}
+            >
+              {filteredMembers.map((m) => {
+                const userPlans = (fitnessPlans || []).filter((p) => p.user_id === m.user_id);
+                const userPlanIds = userPlans.map((p) => p.plan_id);
+                const userWorkouts = (workouts || []).filter((w) => userPlanIds.includes(w.plan_id));
+                const workoutIds = userWorkouts.map((w) => w.workout_id);
+                const userExercises = (exercises || []).filter((e) => workoutIds.includes(e.workout_id));
+                const userVitals = (healthTrackers || []).filter((h) => h.user_id === m.user_id).slice(-1)[0];
+                const userNutri = (nutritionPlans || []).filter((n) => n.user_id === m.user_id).slice(-1)[0];
+                const userReport = (progressReports || []).filter((pr) => pr.user_id === m.user_id).slice(-1)[0];
+                const compPercentage = userReport ? userReport.completion_percentage : 75;
+
+                return (
+                  <div
+                    key={m.user_id}
+                    style={{
+                      background: '#f8fafc',
+                      border: '1.5px solid #e2e8f0',
+                      borderRadius: '16px',
+                      padding: '18px',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'space-between',
+                      gap: '16px',
+                      boxShadow: '0 2px 6px rgba(0,0,0,0.02)',
+                      transition: 'all 0.15s ease'
+                    }}
+                  >
+                    {/* Top User Info */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                          <div
+                            style={{
+                              width: '46px',
+                              height: '46px',
+                              borderRadius: '12px',
+                              background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
+                              color: '#ffffff',
+                              fontWeight: 900,
+                              fontSize: '20px',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              boxShadow: '0 3px 8px rgba(37, 99, 235, 0.25)'
+                            }}
+                          >
+                            {(m.name || 'M').charAt(0).toUpperCase()}
+                          </div>
+                          <div>
+                            <strong style={{ fontSize: '15px', color: '#0f172a', display: 'block' }}>
+                              {m.name}
+                            </strong>
+                            <span style={{ fontSize: '12px', color: '#64748b' }}>{m.email}</span>
+                          </div>
+                        </div>
+
+                        <span
+                          style={{
+                            background: '#e0e7ff',
+                            color: '#3730a3',
+                            padding: '3px 8px',
+                            borderRadius: '6px',
+                            fontSize: '11px',
+                            fontWeight: 800
+                          }}
+                        >
+                          {m.fitness_level || 'Member'}
+                        </span>
+                      </div>
+
+                      {/* Bio Stats Tag */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          background: '#ffffff',
+                          padding: '6px 12px',
+                          borderRadius: '8px',
+                          border: '1px solid #e2e8f0',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          color: '#475569'
+                        }}
+                      >
+                        <span>🎂 {m.age || 26} yrs</span>
+                        <span>•</span>
+                        <span>⚖️ {m.weight || 68} kg</span>
+                        <span>•</span>
+                        <span>📏 {m.height || 175} cm</span>
+                      </div>
+
+                      {/* Vital Metrics Grid */}
+                      <div
+                        style={{
+                          display: 'grid',
+                          gridTemplateColumns: '1fr 1fr',
+                          gap: '8px',
+                          background: '#ffffff',
+                          padding: '12px',
+                          borderRadius: '10px',
+                          border: '1px solid #e2e8f0',
+                          fontSize: '11px'
+                        }}
+                      >
+                        <div>
+                          <span style={{ color: '#64748b', fontWeight: 700, display: 'block' }}>Heart Rate</span>
+                          <strong style={{ color: '#e11d48', fontSize: '13px', display: 'block', marginTop: '2px' }}>
+                            ❤️ {userVitals ? `${userVitals.heart_rate} BPM` : '74 BPM'}
+                          </strong>
+                        </div>
+                        <div>
+                          <span style={{ color: '#64748b', fontWeight: 700, display: 'block' }}>Daily Steps</span>
+                          <strong style={{ color: '#16a34a', fontSize: '13px', display: 'block', marginTop: '2px' }}>
+                            👟 {userVitals ? `${userVitals.steps.toLocaleString()}` : '6,200'}
+                          </strong>
+                        </div>
+                        <div>
+                          <span style={{ color: '#64748b', fontWeight: 700, display: 'block' }}>Active Plans</span>
+                          <strong style={{ color: '#ca8a04', fontSize: '13px', display: 'block', marginTop: '2px' }}>
+                            🏋️ {userPlans.length} ({userExercises.length} Ex.)
+                          </strong>
+                        </div>
+                        <div>
+                          <span style={{ color: '#64748b', fontWeight: 700, display: 'block' }}>Calorie Target</span>
+                          <strong style={{ color: '#2563eb', fontSize: '13px', display: 'block', marginTop: '2px' }}>
+                            🥗 {userNutri ? `${userNutri.daily_calories} kcal` : '2,200 kcal'}
+                          </strong>
+                        </div>
+                      </div>
+
+                      {/* Progress Score Bar */}
+                      <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', fontWeight: 800, marginBottom: '6px' }}>
+                          <span style={{ color: '#64748b' }}>Routine Completion:</span>
+                          <span style={{ color: compPercentage >= 75 ? '#16a34a' : '#ca8a04' }}>{compPercentage}%</span>
+                        </div>
+                        <div style={{ height: '8px', background: '#f1f5f9', borderRadius: '6px', overflow: 'hidden' }}>
+                          <div
+                            style={{
+                              height: '100%',
+                              width: `${compPercentage}%`,
+                              background: compPercentage >= 75 ? 'linear-gradient(90deg, #16a34a, #22c55e)' : 'linear-gradient(90deg, #eab308, #ca8a04)',
+                              borderRadius: '6px'
+                            }}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Current Assigned Exercises Preview */}
+                      <div style={{ background: '#ffffff', padding: '10px 12px', borderRadius: '10px', border: '1px solid #e2e8f0' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '6px' }}>
+                          <span style={{ fontSize: '11px', fontWeight: 800, color: '#64748b' }}>Assigned Exercises:</span>
+                          <span style={{ fontSize: '10px', fontWeight: 900, color: '#2563eb' }}>{userExercises.length} Total</span>
+                        </div>
+
+                        {userExercises.length > 0 ? (
+                          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxHeight: '72px', overflowY: 'auto' }}>
+                            {userExercises.slice(0, 3).map((ex, idx) => (
+                              <span
+                                key={ex.exercise_id || idx}
+                                style={{
+                                  background: '#f1f5f9',
+                                  color: '#1e293b',
+                                  padding: '3px 8px',
+                                  borderRadius: '6px',
+                                  fontSize: '11px',
+                                  fontWeight: 800,
+                                  border: '1px solid #e2e8f0'
+                                }}
+                              >
+                                {ex.name} ({ex.sets}×{ex.reps})
+                              </span>
+                            ))}
+                            {userExercises.length > 3 && (
+                              <span style={{ background: '#fef9c3', color: '#854d0e', padding: '3px 6px', borderRadius: '6px', fontSize: '10px', fontWeight: 900 }}>
+                                +{userExercises.length - 3} more
+                              </span>
+                            )}
+                          </div>
+                        ) : (
+                          <span style={{ fontSize: '11px', color: '#94a3b8', fontStyle: 'italic' }}>No custom exercises assigned yet.</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Bottom Action Buttons */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <button
+                          onClick={() => {
+                            setSelectedMember(m);
+                            setShowExerciseModal(true);
+                          }}
+                          style={{
+                            background: '#2563eb',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '9px 10px',
+                            fontWeight: 800,
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px',
+                            boxShadow: '0 2px 6px rgba(37, 99, 235, 0.2)'
+                          }}
+                        >
+                          💪 + Exercise
+                        </button>
+                        <button
+                          onClick={() => {
+                            setSelectedMember(m);
+                            setShowPlanModal(true);
+                          }}
+                          style={{
+                            background: '#eab308',
+                            color: '#ffffff',
+                            border: 'none',
+                            borderRadius: '8px',
+                            padding: '9px 10px',
+                            fontWeight: 800,
+                            fontSize: '12px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '4px',
+                            boxShadow: '0 2px 6px rgba(234, 179, 8, 0.2)'
+                          }}
+                        >
+                          📋 Full Plan
+                        </button>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+                        <button
+                          onClick={() => {
+                            setSelectedMember(m);
+                            setShowNutritionModal(true);
+                          }}
+                          className="btn-secondary"
+                          style={{
+                            padding: '8px 10px',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            cursor: 'pointer'
+                          }}
+                        >
+                          🥗 Set Diet
+                        </button>
+                        <button
+                          onClick={() => setViewingProgressMember(m)}
+                          className="btn-secondary"
+                          style={{
+                            padding: '8px 10px',
+                            borderRadius: '8px',
+                            fontSize: '12px',
+                            fontWeight: 700,
+                            cursor: 'pointer',
+                            color: '#ca8a04'
+                          }}
+                        >
+                          👁️ View Progress
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {filteredMembers.length === 0 && (
+              <div style={{ textAlign: 'center', padding: '40px 20px', color: '#94a3b8' }}>
+                <p style={{ fontWeight: 800, fontSize: '16px', margin: '0 0 6px' }}>No members found matching filter criteria.</p>
+                <p style={{ fontSize: '13px', margin: 0 }}>Try clearing the search term or switching the fitness tier filter.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 1: DIRECT EXERCISE ASSIGNMENT */}
+      {showExerciseModal && selectedMember && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(15, 23, 42, 0.5)',
+            background: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 999,
-            padding: '1rem'
+            padding: '20px',
+            zIndex: 99999
           }}
         >
           <div
             style={{
               background: '#ffffff',
-              border: '1px solid #ca8a04',
-              borderRadius: '16px',
-              padding: '2rem',
+              border: '2px solid #3b82f6',
+              borderRadius: '20px',
+              padding: '24px',
               width: '100%',
               maxWidth: '480px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.15)'
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ margin: 0, color: '#854d0e', fontSize: '1.25rem', fontWeight: 900 }}>
-                📋 ASSIGN WORKOUT PLAN
-              </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#2563eb', margin: 0 }}>
+                  ASSIGN NEW EXERCISE
+                </h3>
+                <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>
+                  Assigning directly to: <strong style={{ color: '#0f172a' }}>{selectedMember.name}</strong>
+                </p>
+              </div>
               <button
-                onClick={() => setShowPlanModal(false)}
-                style={{ background: 'none', border: 'none', color: '#0f172a', fontSize: '1.2rem', cursor: 'pointer', fontWeight: 800 }}
+                onClick={() => setShowExerciseModal(false)}
+                style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#94a3b8', fontWeight: 900 }}
               >
                 ✕
               </button>
             </div>
 
-            <p style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '1.25rem', fontWeight: 500 }}>
-              Assigning new routine directly to member: <strong style={{ color: '#000000' }}>{selectedMember.name}</strong>
-            </p>
+            {/* Quick Pick Presets */}
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', marginBottom: '6px' }}>
+                ⚡ QUICK PRESET EXERCISES
+              </label>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                {quickExercises.map((qe, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => {
+                      setExerciseName(qe.name);
+                      setExerciseSets(qe.sets);
+                      setExerciseReps(String(qe.reps));
+                      setExerciseCategory(qe.cat);
+                    }}
+                    style={{
+                      background: '#f1f5f9',
+                      border: '1px solid #cbd5e1',
+                      borderRadius: '6px',
+                      padding: '4px 8px',
+                      fontSize: '11px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      color: '#1e293b'
+                    }}
+                  >
+                    + {qe.name}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-            <form onSubmit={handleAssignPlan}>
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
-                  PLAN NAME
+            <form onSubmit={handleAssignExercise} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
+                  EXERCISE NAME
                 </label>
                 <input
                   type="text"
-                  placeholder="e.g. Master Power Shred v2"
-                  value={planName}
-                  onChange={(e) => setPlanName(e.target.value)}
+                  placeholder="e.g. Incline Dumbbell Press"
+                  value={exerciseName}
+                  onChange={(e) => setExerciseName(e.target.value)}
                   required
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem',
-                    background: '#ffffff',
-                    border: '1px solid #cbd5e1',
-                    borderRadius: '8px',
-                    color: '#0f172a'
-                  }}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
                 />
               </div>
 
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
-                  WORKOUT ROUTINE TYPE
-                </label>
-                <select
-                  value={workoutType}
-                  onChange={(e) => setWorkoutType(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem',
-                    background: '#ffffff',
-                    border: '1px solid #cbd5e1',
-                    borderRadius: '8px',
-                    color: '#0f172a'
-                  }}
-                >
-                  <option value="Power Hypertrophy Routine">Power Hypertrophy Routine</option>
-                  <option value="HIIT Conditioning Circuit">HIIT Conditioning Circuit</option>
-                  <option value="Strength & Mobility Focus">Strength & Mobility Focus</option>
-                  <option value="Endurance Cardio Burner">Endurance Cardio Burner</option>
-                </select>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
+                    SETS
+                  </label>
+                  <input
+                    type="number"
+                    min="1"
+                    max="10"
+                    value={exerciseSets}
+                    onChange={(e) => setExerciseSets(Number(e.target.value))}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
+                  />
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
+                    REPS / TIME
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. 12 or 45s"
+                    value={exerciseReps}
+                    onChange={(e) => setExerciseReps(e.target.value)}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
+                  />
+                </div>
               </div>
 
-              <div style={{ marginBottom: '1.5rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
-                  DURATION (MINUTES)
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
+                  ROUTINE FOCUS (OPTIONAL)
                 </label>
                 <input
-                  type="number"
-                  min="15"
-                  max="120"
-                  value={durationMinutes}
-                  onChange={(e) => setDurationMinutes(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem',
-                    background: '#ffffff',
-                    border: '1px solid #cbd5e1',
-                    borderRadius: '8px',
-                    color: '#0f172a'
-                  }}
+                  type="text"
+                  placeholder="e.g. Upper Body Hypertrophy"
+                  value={exerciseTargetWorkout}
+                  onChange={(e) => setExerciseTargetWorkout(e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
                 />
               </div>
 
-              <button
-                type="submit"
-                style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  background: '#ca8a04',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontWeight: 900,
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(202, 138, 4, 0.2)'
-                }}
-              >
-                CONFIRM & ASSIGN PLAN
-              </button>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowExerciseModal(false)}
+                  className="btn-secondary"
+                  style={{ flex: 1, height: '42px', borderRadius: '8px', fontWeight: 800 }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn"
+                  style={{ flex: 2, background: '#2563eb', color: '#fff', height: '42px', borderRadius: '8px', fontWeight: 900 }}
+                >
+                  ✓ Assign Exercise Now
+                </button>
+              </div>
             </form>
           </div>
         </div>
       )}
 
-      {/* NUTRITION ASSIGNMENT MODAL (LIGHT THEME) */}
-      {showNutritionModal && selectedMember && (
+      {/* MODAL 2: FULL WORKOUT ROUTINE ASSIGNMENT */}
+      {showPlanModal && selectedMember && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
-            background: 'rgba(15, 23, 42, 0.5)',
+            background: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(4px)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            zIndex: 999,
-            padding: '1rem'
+            padding: '20px',
+            zIndex: 99999
           }}
         >
           <div
             style={{
               background: '#ffffff',
-              border: '1px solid #2563eb',
-              borderRadius: '16px',
-              padding: '2rem',
+              border: '2px solid #eab308',
+              borderRadius: '20px',
+              padding: '24px',
               width: '100%',
               maxWidth: '480px',
-              boxShadow: '0 10px 30px rgba(0,0,0,0.15)'
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
             }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-              <h3 style={{ margin: 0, color: '#1e40af', fontSize: '1.25rem', fontWeight: 900 }}>
-                🥗 ASSIGN NUTRITION TARGETS
-              </h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#ca8a04', margin: 0 }}>
+                  ASSIGN FULL WORKOUT ROUTINE
+                </h3>
+                <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>
+                  Assigning to: <strong style={{ color: '#0f172a' }}>{selectedMember.name}</strong>
+                </p>
+              </div>
               <button
-                onClick={() => setShowNutritionModal(false)}
-                style={{ background: 'none', border: 'none', color: '#0f172a', fontSize: '1.2rem', cursor: 'pointer', fontWeight: 800 }}
+                onClick={() => setShowPlanModal(false)}
+                style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#94a3b8', fontWeight: 900 }}
               >
                 ✕
               </button>
             </div>
 
-            <p style={{ fontSize: '0.85rem', color: '#475569', marginBottom: '1.25rem', fontWeight: 500 }}>
-              Configuring diet & macro goals for <strong style={{ color: '#000000' }}>{selectedMember.name}</strong>
-            </p>
+            <form onSubmit={handleAssignPlan} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
+                  PLAN / ROUTINE NAME
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. Master Shred & Power v2"
+                  value={planName}
+                  onChange={(e) => setPlanName(e.target.value)}
+                  required
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
+                />
+              </div>
 
-            <form onSubmit={handleAssignNutrition}>
-              <div style={{ marginBottom: '1rem' }}>
-                <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
+                    ROUTINE TYPE
+                  </label>
+                  <select
+                    value={workoutType}
+                    onChange={(e) => setWorkoutType(e.target.value)}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '12px', fontWeight: 700 }}
+                  >
+                    <option value="Power Hypertrophy Routine">Power Hypertrophy Routine</option>
+                    <option value="HIIT Conditioning Circuit">HIIT Conditioning Circuit</option>
+                    <option value="Strength & Mobility Focus">Strength & Mobility Focus</option>
+                    <option value="Endurance Cardio Burner">Endurance Cardio Burner</option>
+                  </select>
+                </div>
+                <div>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
+                    DURATION (MINS)
+                  </label>
+                  <input
+                    type="number"
+                    min="15"
+                    max="120"
+                    value={durationMinutes}
+                    onChange={(e) => setDurationMinutes(e.target.value)}
+                    style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                  <label style={{ fontSize: '11px', fontWeight: 900, color: '#0f172a' }}>
+                    EXERCISES (NAME, SETS, REPS)
+                  </label>
+                  <span style={{ fontSize: '10px', color: '#64748b' }}>1 per line</span>
+                </div>
+                <textarea
+                  rows={4}
+                  value={customExerciseLines}
+                  onChange={(e) => setCustomExerciseLines(e.target.value)}
+                  style={{ width: '100%', padding: '10px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '12px', fontFamily: 'monospace' }}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowPlanModal(false)}
+                  className="btn-secondary"
+                  style={{ flex: 1, height: '42px', borderRadius: '8px', fontWeight: 800 }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ flex: 2, height: '42px', borderRadius: '8px', fontWeight: 900 }}
+                >
+                  ✓ Confirm & Assign Plan
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 3: NUTRITION TARGETS ASSIGNMENT */}
+      {showNutritionModal && selectedMember && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            zIndex: 99999
+          }}
+        >
+          <div
+            style={{
+              background: '#ffffff',
+              border: '2px solid #16a34a',
+              borderRadius: '20px',
+              padding: '24px',
+              width: '100%',
+              maxWidth: '440px',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
+              <div>
+                <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#16a34a', margin: 0 }}>
+                  ASSIGN NUTRITION TARGETS
+                </h3>
+                <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>
+                  Target for: <strong style={{ color: '#0f172a' }}>{selectedMember.name}</strong>
+                </p>
+              </div>
+              <button
+                onClick={() => setShowNutritionModal(false)}
+                style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#94a3b8', fontWeight: 900 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            <form onSubmit={handleAssignNutrition} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
                   DIET TYPE
                 </label>
                 <input
                   type="text"
                   value={dietType}
                   onChange={(e) => setDietType(e.target.value)}
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem',
-                    background: '#ffffff',
-                    border: '1px solid #cbd5e1',
-                    borderRadius: '8px',
-                    color: '#0f172a'
-                  }}
+                  style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
                 />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
                     DAILY CALORIES
                   </label>
                   <input
                     type="number"
                     value={dailyCalories}
                     onChange={(e) => setDailyCalories(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      background: '#ffffff',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: '8px',
-                      color: '#0f172a'
-                    }}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
                     PROTEIN (G)
                   </label>
                   <input
                     type="number"
                     value={proteinG}
                     onChange={(e) => setProteinG(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      background: '#ffffff',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: '8px',
-                      color: '#0f172a'
-                    }}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
                   />
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', marginBottom: '1.5rem' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
                     CARBS (G)
                   </label>
                   <input
                     type="number"
                     value={carbsG}
                     onChange={(e) => setCarbsG(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      background: '#ffffff',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: '8px',
-                      color: '#0f172a'
-                    }}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
                   />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '0.75rem', color: '#475569', textTransform: 'uppercase', marginBottom: '0.3rem', fontWeight: 800 }}>
+                  <label style={{ display: 'block', fontSize: '11px', fontWeight: 900, color: '#0f172a', marginBottom: '4px' }}>
                     FATS (G)
                   </label>
                   <input
                     type="number"
                     value={fatsG}
                     onChange={(e) => setFatsG(e.target.value)}
-                    style={{
-                      width: '100%',
-                      padding: '0.65rem',
-                      background: '#ffffff',
-                      border: '1px solid #cbd5e1',
-                      borderRadius: '8px',
-                      color: '#0f172a'
-                    }}
+                    style={{ width: '100%', padding: '9px 12px', borderRadius: '8px', border: '1px solid #cbd5e1', fontSize: '13px', fontWeight: 700 }}
                   />
                 </div>
               </div>
 
-              <button
-                type="submit"
-                style={{
-                  width: '100%',
-                  padding: '0.8rem',
-                  background: '#2563eb',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: '8px',
-                  fontWeight: 900,
-                  fontSize: '0.9rem',
-                  cursor: 'pointer',
-                  boxShadow: '0 4px 12px rgba(37,99,235,0.2)'
-                }}
-              >
-                APPLY NUTRITION TARGETS
-              </button>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => setShowNutritionModal(false)}
+                  className="btn-secondary"
+                  style={{ flex: 1, height: '40px', borderRadius: '8px', fontWeight: 800 }}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  style={{ flex: 2, background: '#16a34a', color: '#fff', border: 'none', height: '40px', borderRadius: '8px', fontWeight: 900, cursor: 'pointer' }}
+                >
+                  ✓ Apply Diet
+                </button>
+              </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: DETAILED MEMBER PROGRESS DRILLDOWN */}
+      {viewingProgressMember && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(15, 23, 42, 0.65)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            zIndex: 99999
+          }}
+        >
+          <div
+            style={{
+              background: '#ffffff',
+              border: '1px solid #cbd5e1',
+              borderRadius: '20px',
+              padding: '24px',
+              width: '100%',
+              maxWidth: '600px',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+            }}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px', borderBottom: '1px solid #f1f5f9', paddingBottom: '12px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ width: '50px', height: '50px', borderRadius: '12px', background: '#eab308', color: '#fff', fontSize: '22px', fontWeight: 900, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {(viewingProgressMember.name || 'M').charAt(0)}
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '20px', fontWeight: 900, margin: 0, color: '#0f172a' }}>
+                    {viewingProgressMember.name}
+                  </h3>
+                  <p style={{ margin: '2px 0 0', fontSize: '12px', color: '#64748b' }}>
+                    {viewingProgressMember.email} • {viewingProgressMember.fitness_level || 'Member'}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => setViewingProgressMember(null)}
+                style={{ background: 'none', border: 'none', fontSize: '20px', cursor: 'pointer', color: '#94a3b8', fontWeight: 900 }}
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Quick Metrics */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px', marginBottom: '18px' }}>
+              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '10px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, display: 'block' }}>Weight</span>
+                <strong style={{ fontSize: '15px' }}>{viewingProgressMember.weight || 68} kg</strong>
+              </div>
+              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '10px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, display: 'block' }}>Age</span>
+                <strong style={{ fontSize: '15px' }}>{viewingProgressMember.age || 26} yrs</strong>
+              </div>
+              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '10px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, display: 'block' }}>Heart Rate</span>
+                <strong style={{ fontSize: '15px', color: '#e11d48' }}>
+                  {((healthTrackers || []).filter((h) => h.user_id === viewingProgressMember.user_id).slice(-1)[0]?.heart_rate || 72)} BPM
+                </strong>
+              </div>
+              <div style={{ background: '#f8fafc', padding: '10px', borderRadius: '10px', border: '1px solid #e2e8f0', textAlign: 'center' }}>
+                <span style={{ fontSize: '11px', color: '#64748b', fontWeight: 700, display: 'block' }}>Daily Steps</span>
+                <strong style={{ fontSize: '15px', color: '#16a34a' }}>
+                  {((healthTrackers || []).filter((h) => h.user_id === viewingProgressMember.user_id).slice(-1)[0]?.steps || 5000).toLocaleString()}
+                </strong>
+              </div>
+            </div>
+
+            {/* Plans List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <h4 style={{ fontSize: '13px', fontWeight: 900, color: '#64748b', textTransform: 'uppercase', margin: 0 }}>
+                Assigned Workout Plans & Exercises
+              </h4>
+
+              {(() => {
+                const uPlans = (fitnessPlans || []).filter((p) => p.user_id === viewingProgressMember.user_id);
+                if (uPlans.length === 0) {
+                  return (
+                    <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '10px', textAlign: 'center', fontSize: '12px', color: '#94a3b8' }}>
+                      No workout plans assigned yet.
+                    </div>
+                  );
+                }
+
+                return uPlans.map((plan) => {
+                  const pWorkouts = (workouts || []).filter((w) => w.plan_id === plan.plan_id);
+                  const pWorkoutIds = pWorkouts.map((w) => w.workout_id);
+                  const pExercises = (exercises || []).filter((e) => pWorkoutIds.includes(e.workout_id));
+
+                  return (
+                    <div key={plan.plan_id} style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                        <div>
+                          <strong style={{ fontSize: '14px', color: '#0f172a', display: 'block' }}>{plan.plan_name}</strong>
+                          <span style={{ fontSize: '11px', color: '#64748b' }}>Assigned on {plan.start_date}</span>
+                        </div>
+                        <span style={{ background: '#fef9c3', color: '#854d0e', padding: '3px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 800 }}>
+                          {pWorkouts[0]?.type || 'Active Routine'}
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px' }}>
+                        {pExercises.map((ex, i) => (
+                          <div key={ex.exercise_id || i} style={{ background: '#ffffff', padding: '8px 10px', borderRadius: '8px', border: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '12px' }}>
+                            <span style={{ fontWeight: 700, color: '#1e293b' }}>{ex.name}</span>
+                            <span style={{ fontWeight: 900, color: '#2563eb' }}>{ex.sets}×{ex.reps}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '20px', borderTop: '1px solid #f1f5f9', paddingTop: '14px' }}>
+              <button
+                onClick={() => {
+                  setSelectedMember(viewingProgressMember);
+                  setViewingProgressMember(null);
+                  setShowExerciseModal(true);
+                }}
+                className="btn"
+                style={{ background: '#2563eb', color: '#fff', padding: '0 16px', height: '38px', borderRadius: '8px', fontSize: '13px' }}
+              >
+                + Assign Exercise to {viewingProgressMember.name}
+              </button>
+              <button
+                onClick={() => setViewingProgressMember(null)}
+                className="btn-secondary"
+                style={{ padding: '0 16px', height: '38px', borderRadius: '8px', fontSize: '13px' }}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

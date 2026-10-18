@@ -41,14 +41,14 @@ export default function ProgressReports({ reports, onGenerate, onDelete, user })
       {/* Header Banner */}
       <div className="page-head flex-between align-center flex-wrap gap-2 mb-4">
         <div>
-          <div className="page-eyebrow" style={{ fontWeight: 900, color: '#ca8a04', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-            PERFORMANCE TELEMETRY & LOGS →
+          <div className="page-eyebrow" style={{ fontWeight: 800, color: '#ca8a04', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            PROGRESS REPORTS
           </div>
           <h1 className="page-title" style={{ fontSize: '1.75rem', fontWeight: 900, margin: '0.2rem 0' }}>
-            Workout Progress Reports (Text Logs)
+            Workout Progress Reports
           </h1>
           <p className="page-desc" style={{ fontWeight: 600, color: '#64748b' }}>
-            Text-based weekly workout reports, target completion scores, milestone notes, and Gemini AI performance analysis.
+            Weekly progress summaries, completion scores, and workout milestones.
           </p>
         </div>
                   
@@ -59,7 +59,7 @@ export default function ProgressReports({ reports, onGenerate, onDelete, user })
             disabled={isGeneratingAi}
             style={{ fontWeight: 900, padding: '0.65rem 1.1rem', borderRadius: '8px', cursor: 'pointer' }}
           >
-            {isGeneratingAi ? '⏳ Gemini Generating Report...' : '🤖 AI Executive Text Report'}
+            {isGeneratingAi ? '⏳ Generating...' : '🤖 AI Progress Report'}
           </button>
 
           <button
@@ -67,75 +67,71 @@ export default function ProgressReports({ reports, onGenerate, onDelete, user })
             onClick={onGenerate}
             style={{ fontWeight: 900, padding: '0.65rem 1.1rem', borderRadius: '8px', cursor: 'pointer' }}
           >
-            ➕ Standard Text Report
+            ➕ New Report
           </button>
         </div>
       </div>
 
-      {/* Top Executive Performance Summary Cards (Text-Only) */}
+      {/* Top Executive Performance Summary Cards */}
       <div className="grid grid-3 gap-3 mb-4">
         <div className="card text-center" style={{ border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', padding: '1.25rem', borderRadius: '12px' }}>
           <span className="stat-lbl" style={{ fontWeight: 900, color: '#64748b', fontSize: '0.78rem', textTransform: 'uppercase' }}>
-            📝 TOTAL REPORTS LOGGED
+            📝 TOTAL REPORTS
           </span>
           <div className="stat-num my-2" style={{ fontWeight: 900, fontSize: '2.2rem', color: '#2563eb' }}>
-            {totalReports} Reports
+            {totalReports}
           </div>
           <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#16a34a' }}>
-            ● Text logs up-to-date
+            ● Logs up to date
           </span>
         </div>
 
         <div className="card text-center" style={{ border: '1px solid #fef08a', background: '#fef9c3', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', padding: '1.25rem', borderRadius: '12px' }}>
           <span className="stat-lbl" style={{ fontWeight: 900, color: '#854d0e', fontSize: '0.78rem', textTransform: 'uppercase' }}>
-            📊 AVG COMPLETION SCORE
+            📊 AVG COMPLETION
           </span>
           <div className="stat-num my-2" style={{ fontWeight: 900, fontSize: '2.2rem', color: '#ca8a04' }}>
             {avgCompletion}%
           </div>
           <span style={{ fontWeight: 800, fontSize: '0.8rem', color: '#854d0e' }}>
-            Overall Workout Consistency Target
+            Overall Consistency Target
           </span>
         </div>
 
         <div className="card text-center" style={{ border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.03)', padding: '1.25rem', borderRadius: '12px' }}>
           <span className="stat-lbl" style={{ fontWeight: 900, color: '#64748b', fontSize: '0.78rem', textTransform: 'uppercase' }}>
-            🏆 PEAK WORKOUT MILESTONE
+            🏆 HIGHEST SCORE
           </span>
           <div className="stat-num my-2" style={{ fontWeight: 900, fontSize: '2.2rem', color: '#16a34a' }}>
             {highestCompletion}%
           </div>
           <span style={{ fontWeight: 700, fontSize: '0.8rem', color: '#166534' }}>
-            Highest recorded weekly completion
+            Peak weekly completion
           </span>
         </div>
       </div>
                
-      {/* Text Filter Bar */}
+      {/* Filter Bar */}
       <div className="card mb-4 p-3 flex-between align-center flex-wrap gap-2" style={{ borderRadius: '12px', border: '1px solid #e2e8f0', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div className="flex align-center gap-2 flex-wrap" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
           <span style={{ fontWeight: 900, fontSize: '0.85rem', color: '#64748b', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-            FILTER TEXT LOGS:
+            FILTER LOGS:
           </span>
           <button
             className={`btn btn-sm ${filterMode === 'all' ? 'btn-primary' : 'btn-secondary'}`}
             onClick={() => setFilterMode('all')}
             style={{ fontWeight: 900, padding: '0.55rem 1.1rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
           >
-            📋 All Text Reports ({sorted.length})
+            📋 All Reports ({sorted.length})
           </button>
           <button
             className={`btn btn-sm ${filterMode === 'high' ? 'btn-primary' : 'btn-secondary'}`}
             onClick={() => setFilterMode('high')}
             style={{ fontWeight: 900, padding: '0.55rem 1.1rem', borderRadius: '8px', cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
           >
-            ⭐ High Target Scores (80%+)
+            ⭐ High Scores (80%+)
           </button>
         </div>
-
-        <span style={{ fontSize: '0.8rem', fontWeight: 800, color: '#ca8a04', display: 'inline-flex', alignItems: 'center', gap: '0.3rem' }}>
-          📄 Text-Only Mode Active (No Photos)
-        </span>
       </div>
  
       {/* Text Workout Report Cards List */}

@@ -41,11 +41,9 @@ export default function SupplementManager({ supplements = [], onAddSupplement, o
                   className={`supp-item p-3 mb-3 border-radius flex-between align-center flex-wrap gap-2 ${supp.taken_today ? 'taken' : ''}`}
                 >
                   <div className="flex align-center gap-3">
-                    <img
-                      src={supp.image || defaultSuppImg}
-                      alt={supp.name}
-                      className="supp-img-thumb"
-                    />
+                    <div className="w-11 h-11 rounded-xl bg-purple-100 text-purple-600 dark:bg-purple-950/40 dark:text-purple-400 font-bold text-xl flex items-center justify-center shrink-0">
+                      💊
+                    </div>
                     <div>
                       <div className="flex-gap align-center mb-1">
                         <span className="badge badge-accent">{supp.timing}</span>
