@@ -1,0 +1,5 @@
+{
+  "uri": "mongodb+srv://24104025_db_user:HxM3b9pQ1uUywf7f@cluster0.sump7fc.mongodb.net/?appName=Cluster0",
+  "dbName": "smart_fitness_companion",
+  "autoSync": true
+}

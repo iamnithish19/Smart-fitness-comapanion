@@ -1,0 +1,98 @@
+================================================================================
+SMART FITNESS COMPANION - WORKOUT PLANS DATASET
+================================================================================
+Version: 1.0.0
+Description: Structured fitness plans, scheduled workout routines, target goals,
+             duration parameters, and daily schedules for fitness companion users.
+================================================================================
+
+--------------------------------------------------------------------------------
+PLAN ID: PLAN-001
+Plan Name: Summer Shred 8-Week Protocol
+Category: Fat Loss & Conditioning
+Target User Level: Intermediate
+Duration: 8 Weeks
+Frequency: 5 Days per Week
+Goal: Reduce body fat by 3-5%, increase cardiovascular capacity and muscle definition.
+--------------------------------------------------------------------------------
+[ROUTINE_01]
+Day: Monday
+Workout Title: High-Burn Cardio Intervals
+Duration: 40 Minutes
+Target HR Zone: Zone 4 (155 - 175 BPM)
+Included Exercises:
+  - EX-002: Treadmill High Intensity Interval Run (25 mins)
+  - EX-008: Speed Jump Rope (4 sets x 60 reps)
+  - EX-005: Mountain Climbers (4 sets x 30 secs)
+Estimated Calorie Expenditure: 480 kcal
+
+[ROUTINE_02]
+Day: Tuesday
+Workout Title: Full Body HIIT Burner
+Duration: 25 Minutes
+Target HR Zone: Zone 4-5 (160 - 180 BPM)
+Included Exercises:
+  - EX-003: Bodyweight Burpees (5 sets x 15 reps)
+  - EX-005: Mountain Climbers (5 sets x 20 reps)
+  - EX-010: Plank to Push-Up (3 sets x 12 reps)
+Estimated Calorie Expenditure: 320 kcal
+
+[ROUTINE_03]
+Day: Wednesday
+Workout Title: Active Recovery & Mobility
+Duration: 30 Minutes
+Target HR Zone: Zone 1 (100 - 120 BPM)
+Included Exercises: Dynamic Stretching, Light Foam Rolling, Mat Mobility Flow
+Estimated Calorie Expenditure: 110 kcal
+
+[ROUTINE_04]
+Day: Thursday
+Workout Title: Lower Body Explosive Power
+Duration: 45 Minutes
+Target HR Zone: Zone 3 (135 - 155 BPM)
+Included Exercises:
+  - EX-009: Goblet Squat (4 sets x 12 reps)
+  - EX-006: Romanian Deadlift (4 sets x 10 reps)
+  - EX-008: Speed Jump Rope (5 sets x 80 reps)
+Estimated Calorie Expenditure: 410 kcal
+
+[ROUTINE_05]
+Day: Friday
+Workout Title: Upper Body Hypertrophy & Core
+Duration: 50 Minutes
+Target HR Zone: Zone 3 (130 - 150 BPM)
+Included Exercises:
+  - EX-001: Barbell Bench Press (4 sets x 10 reps)
+  - EX-004: Bodyweight Pull-Ups (4 sets x 8 reps)
+  - EX-007: Dumbbell Overhead Shoulder Press (4 sets x 12 reps)
+Estimated Calorie Expenditure: 430 kcal
+
+--------------------------------------------------------------------------------
+PLAN ID: PLAN-002
+Plan Name: Strength Foundations 12-Week Protocol
+Category: Hypertrophy & Progressive Overload
+Target User Level: Beginner to Intermediate
+Duration: 12 Weeks
+Frequency: 4 Days per Week
+Goal: Build lean muscle mass, improve core compound movement mechanics and grip strength.
+--------------------------------------------------------------------------------
+[ROUTINE_06]
+Day: Monday (Push Focus)
+Workout Title: Upper Body Strength & Pressing
+Duration: 50 Minutes
+Target HR Zone: Zone 2-3 (120 - 145 BPM)
+Included Exercises:
+  - EX-001: Barbell Bench Press (4 sets x 8 reps)
+  - EX-007: Dumbbell Overhead Shoulder Press (4 sets x 10 reps)
+  - EX-010: Plank to Push-Up (3 sets x 15 reps)
+Estimated Calorie Expenditure: 380 kcal
+
+[ROUTINE_07]
+Day: Wednesday (Pull Focus)
+Workout Title: Posterior Chain & Upper Back
+Duration: 45 Minutes
+Target HR Zone: Zone 2-3 (125 - 145 BPM)
+Included Exercises:
+  - EX-004: Bodyweight Pull-Ups (4 sets x 10 reps)
+  - EX-006: Romanian Deadlift (4 sets x 10 reps)
+Estimated Calorie Expenditure: 360 kcal

@@ -1,0 +1,126 @@
+================================================================================
+SMART FITNESS COMPANION - NUTRITION & RECIPES DATASET
+================================================================================
+Version: 1.0.0
+Description: Macro breakdowns, diet plan guidelines, ingredient specifications,
+             nutritional targets, and high-protein athletic recipes.
+================================================================================
+
+--------------------------------------------------------------------------------
+NUTRITIONAL PROFILE TARGETS (User ID: USR-001)
+--------------------------------------------------------------------------------
+Diet Type: High Protein / Lean Mass Maintenance
+Target Daily Energy: 2,100 kcal
+Protein Goal: 145 grams (27.6% of calories)
+Carbohydrate Goal: 210 grams (40.0% of calories)
+Fat Goal: 65 grams (27.8% of calories)
+Fiber Goal: 32 grams
+Water Intake Target: 3,000 mL daily
+
+--------------------------------------------------------------------------------
+RECIPE CATALOG
+--------------------------------------------------------------------------------
+
+[RECIPE_001]
+Title: Grilled Salmon Quinoa & Avocado Power Bowl
+Category: Lunch / High Protein
+Prep & Cook Time: 20 Minutes
+Total Calories: 520 kcal
+Macro Breakdown:
+  - Protein: 42g
+  - Carbohydrates: 48g
+  - Dietary Fiber: 7g
+  - Fats: 16g
+Ingredients:
+  - 180g Atlantic Salmon Fillet
+  - 1 cup Cooked Organic Quinoa
+  - 1/2 Medium Avocado (sliced)
+  - 1 cup Steamed Broccoli Florets
+  - 1 tbsp Extra Virgin Olive Oil & Lemon Pepper
+Preparation Steps:
+  1. Season salmon fillet with lemon pepper and sea salt.
+  2. Sear on medium-high heat skillet with olive oil for 4 minutes per side.
+  3. Fluff warm quinoa and place in serving bowl.
+  4. Top with seared salmon, sliced avocado, and steamed broccoli florets.
+
+[RECIPE_002]
+Title: Berry Power Whey Protein Smoothie
+Category: Breakfast / Pre-Workout
+Prep & Cook Time: 5 Minutes
+Total Calories: 380 kcal
+Macro Breakdown:
+  - Protein: 34g
+  - Carbohydrates: 42g
+  - Dietary Fiber: 6g
+  - Fats: 6g
+Ingredients:
+  - 1 scoop (30g) Vanilla Whey Protein Isolate
+  - 1 cup Frozen Wild Blueberries
+  - 1/2 Organic Banana
+  - 1 cup Unsweetened Almond Milk
+  - 1 tbsp Chia Seeds & 1 handful Organic Baby Spinach
+Preparation Steps:
+  1. Add almond milk, spinach, frozen blueberries, and banana into high-speed blender.
+  2. Add whey protein isolate and chia seeds on top.
+  3. Blend on high for 45-60 seconds until completely smooth.
+
+[RECIPE_003]
+Title: Lean Turkey & Roasted Sweet Potato Skillet
+Category: Dinner / Post-Workout
+Prep & Cook Time: 25 Minutes
+Total Calories: 460 kcal
+Macro Breakdown:
+  - Protein: 38g
+  - Carbohydrates: 45g
+  - Dietary Fiber: 6g
+  - Fats: 12g
+Ingredients:
+  - 170g Lean Ground Turkey Breast (93/7)
+  - 1 medium Sweet Potato (cubed)
+  - 1/2 Red Bell Pepper & 1/2 Yellow Onion (diced)
+  - 1 tbsp Avocado Oil, Garlic Powder, Smoked Paprika
+Preparation Steps:
+  1. Toss cubed sweet potatoes in avocado oil, paprika, and garlic powder; roast at 200°C for 18 minutes.
+  2. Sauté diced onions and bell peppers with ground turkey breast until fully cooked.
+  3. Combine roasted sweet potatoes into skillet and mix thoroughly.
+
+[RECIPE_004]
+Title: Greek Yogurt Parfait with Honey & Raw Almonds
+Category: Snack / Post-Workout Recovery
+Prep & Cook Time: 5 Minutes
+Total Calories: 290 kcal
+Macro Breakdown:
+  - Protein: 24g
+  - Carbohydrates: 32g
+  - Dietary Fiber: 4g
+  - Fats: 5g
+Ingredients:
+  - 200g Non-Fat Plain Greek Yogurt
+  - 1/2 cup Mixed Fresh Strawberries & Raspberries
+  - 15g Raw Sliced Almonds
+  - 1 tbsp Raw Organic Wildflower Honey
+Preparation Steps:
+  1. Spoon half of the Greek yogurt into a glass parfait jar.
+  2. Layer with fresh berries and sliced almonds.
+  3. Add remaining yogurt, top with remaining berries, and drizzle with raw honey.
+
+[RECIPE_005]
+Title: Avocado & Poached Egg Organic Sourdough Toast
+Category: Breakfast / Healthy Fats
+Prep & Cook Time: 10 Minutes
+Total Calories: 350 kcal
+Macro Breakdown:
+  - Protein: 22g
+  - Carbohydrates: 28g
+  - Dietary Fiber: 5g
+  - Fats: 14g
+Ingredients:
+  - 1 slice Artisanal Whole Grain Sourdough Bread
+  - 1/2 Ripe Hass Avocado
+  - 2 Large Organic Cage-Free Eggs
+  - 1 tsp Hemp Hearts, Red Chili Flakes, Sea Salt
+Preparation Steps:
+  1. Toast sourdough slice until golden and crisp.
+  2. Mash avocado with sea salt and spread evenly over toast.
+  3. Poach eggs in simmering water with a drop of vinegar for 3 minutes.
+  4. Gently place poached eggs over avocado toast, sprinkle with hemp hearts and chili flakes.

@@ -1,0 +1,137 @@
+================================================================================
+SMART FITNESS COMPANION - EXERCISES DATASET
+================================================================================
+Version: 1.0.0
+Description: Comprehensive catalog of fitness exercises, target muscle groups,
+             equipment required, calorie burn rates, and execution protocols.
+================================================================================
+
+[EXERCISE_001]
+ID: EX-001
+Name: Barbell Bench Press
+Category: Strength Training
+Primary Muscle: Chest (Pectoralis Major)
+Secondary Muscles: Triceps, Anterior Deltoids
+Equipment: Barbell, Bench
+Difficulty: Intermediate
+Recommended Sets: 4
+Recommended Reps: 8 - 12
+Calorie Burn: 8.5 kcal/min
+Instructions: Lie flat on bench with feet firm on the floor. Grip barbell slightly wider than shoulder width. Lower bar to mid-chest with controlled motion, then press explosively upward until arms are fully extended.
+
+[EXERCISE_002]
+ID: EX-002
+Name: Treadmill High Intensity Interval Run
+Category: Cardio / Endurance
+Primary Muscle: Quadriceps, Hamstrings, Calves
+Secondary Muscles: Core, Glutes
+Equipment: Treadmill
+Difficulty: Advanced
+Recommended Sets: 1 (25 mins)
+Recommended Reps: Continuous (1 min sprint / 1 min jog intervals)
+Calorie Burn: 14.2 kcal/min
+Instructions: Warm up for 3 minutes at 5 km/h. Alternate between 1 minute sprint at 14 km/h (1% incline) and 1 minute recovery jog at 6 km/h for 20 minutes. Cool down for 2 minutes.
+
+[EXERCISE_003]
+ID: EX-003
+Name: Bodyweight Burpees
+Category: HIIT / Calisthenics
+Primary Muscle: Full Body
+Secondary Muscles: Quadriceps, Core, Chest, Shoulders
+Equipment: None (Bodyweight)
+Difficulty: Intermediate
+Recommended Sets: 5
+Recommended Reps: 15 - 20
+Calorie Burn: 12.0 kcal/min
+Instructions: Stand feet shoulder-width apart. Drop into a squat, place hands on floor, kick feet back into a push-up position. Perform push-up, jump feet back to hands, and explosively jump vertically reaching arms overhead.
+
+[EXERCISE_004]
+ID: EX-004
+Name: Bodyweight Pull-Ups
+Category: Strength Training
+Primary Muscle: Upper Back (Latissimus Dorsi)
+Secondary Muscles: Biceps, Brachialis, Core
+Equipment: Pull-Up Bar
+Difficulty: Intermediate
+Recommended Sets: 4
+Recommended Reps: 8 - 10
+Calorie Burn: 9.0 kcal/min
+Instructions: Hang from pull-up bar with overhand grip slightly wider than shoulders. Pull chest up toward bar until chin passes bar level. Pause briefly at top, then lower with full control to dead-hang position.
+
+[EXERCISE_005]
+ID: EX-005
+Name: Mountain Climbers
+Category: HIIT / Core
+Primary Muscle: Abdominals (Rectus Abdominis)
+Secondary Muscles: Hip Flexors, Deltoids, Quadriceps
+Equipment: Exercise Mat
+Difficulty: Beginner
+Recommended Sets: 5
+Recommended Reps: 30 seconds (continuous)
+Calorie Burn: 10.5 kcal/min
+Instructions: Start in high plank position with shoulders directly above wrists. Drive right knee rapidly toward chest, quickly return foot back while driving left knee toward chest in a running motion. Keep hips low.
+
+[EXERCISE_006]
+ID: EX-006
+Name: Romanian Deadlift
+Category: Strength / Hypertrophy
+Primary Muscle: Hamstrings, Glutes
+Secondary Muscles: Erector Spinae, Core, Forearms
+Equipment: Barbell or Dumbbells
+Difficulty: Intermediate
+Recommended Sets: 4
+Recommended Reps: 10 - 12
+Calorie Burn: 7.8 kcal/min
+Instructions: Hold barbell at hip height with soft knee bend. Hinge forward at hips, pushing glutes backward while keeping spine neutral until bar passes knees. Engage hamstrings and glutes to pull back to starting upright position.
+
+[EXERCISE_007]
+ID: EX-007
+Name: Dumbbell Overhead Shoulder Press
+Category: Strength Training
+Primary Muscle: Deltoids (Anterior & Lateral)
+Secondary Muscles: Triceps, Upper Trapezius
+Equipment: Dumbbells, Adjustable Bench
+Difficulty: Intermediate
+Recommended Sets: 4
+Recommended Reps: 10 - 12
+Calorie Burn: 7.2 kcal/min
+Instructions: Sit upright on bench at 90 degrees. Hold dumbbells at shoulder height with palms facing forward. Press dumbbells overhead until arms are nearly straight, avoiding arching lower back. Lower back to ear level under control.
+
+[EXERCISE_008]
+ID: EX-008
+Name: Speed Jump Rope
+Category: Cardio / Conditioning
+Primary Muscle: Calves, Cardiovascular System
+Secondary Muscles: Forearms, Deltoids, Core
+Equipment: Speed Jump Rope
+Difficulty: Beginner to Intermediate
+Recommended Sets: 4
+Recommended Reps: 60 - 100 jumps
+Calorie Burn: 13.0 kcal/min
+Instructions: Hold jump rope handles with elbows close to torso. Rotate wrists to turn rope, hopping lightly on balls of feet just high enough for rope to clear. Maintain quick, steady rhythmic breathing.
+
+[EXERCISE_009]
+ID: EX-009
+Name: Goblet Squat
+Category: Functional Strength
+Primary Muscle: Quadriceps, Gluteus Maximus
+Secondary Muscles: Core, Hamstrings, Calves
+Equipment: Kettlebell or Heavy Dumbbell
+Difficulty: Beginner
+Recommended Sets: 4
+Recommended Reps: 12 - 15
+Calorie Burn: 8.0 kcal/min
+Instructions: Hold kettlebell vertically close to chest with both hands. Stand feet slightly wider than shoulder width. Squat down deep by driving hips back and elbows between knees. Press back up through heels to full extension.
+
+[EXERCISE_0010]
+ID: EX-010
+Name: Plank to Push-Up
+Category: Core & Stability
+Primary Muscle: Core, Triceps
+Secondary Muscles: Chest, Anterior Deltoids
+Equipment: Exercise Mat
+Difficulty: Intermediate
+Recommended Sets: 3
+Recommended Reps: 12 - 16 reps (alternating lead arms)
+Calorie Burn: 9.5 kcal/min
+Instructions: Start in forearm plank position. Press up on right hand, then left hand into high push-up position. Lower right forearm back down, followed by left forearm. Maintain stable hips without excessive swaying.

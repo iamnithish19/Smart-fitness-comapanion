@@ -1,0 +1,49 @@
+================================================================================
+SMART FITNESS COMPANION - HEALTH TELEMETRY DATASET
+================================================================================
+Version: 1.0.0
+Description: Wearable sensor telemetry logs, cardiovascular metrics, SpO2 blood
+             oxygen readings, daily step counts, and blood pressure measurements.
+================================================================================
+
+# Format Key:
+# TIMESTAMP | USER_ID | HEART_RATE (BPM) | STEPS | BLOOD_PRESSURE (SYS/DIA) | SPO2 (%) | CALORIES_BURNED (kcal) | STRESS_INDEX (1-100)
+
+--------------------------------------------------------------------------------
+DATE: 2026-08-20 (Baseline Check-in)
+--------------------------------------------------------------------------------
+2026-08-20T07:00:00Z | USR-001 | HR: 62 bpm  | Steps: 0     | BP: 116/76 mmHg | SpO2: 99% | ActiveCal: 0 kcal   | Stress: 18 (Resting)
+2026-08-20T09:30:00Z | USR-001 | HR: 78 bpm  | Steps: 2400  | BP: 118/78 mmHg | SpO2: 99% | ActiveCal: 120 kcal | Stress: 25 (Low)
+2026-08-20T12:45:00Z | USR-001 | HR: 74 bpm  | Steps: 4800  | BP: 120/79 mmHg | SpO2: 98% | ActiveCal: 250 kcal | Stress: 32 (Moderate)
+2026-08-20T17:30:00Z | USR-001 | HR: 158 bpm | Steps: 8900  | BP: 134/84 mmHg | SpO2: 97% | ActiveCal: 610 kcal | Stress: 78 (Workout Peak)
+2026-08-20T21:15:00Z | USR-001 | HR: 65 bpm  | Steps: 10450 | BP: 115/75 mmHg | SpO2: 99% | ActiveCal: 740 kcal | Stress: 15 (Recovery)
+
+--------------------------------------------------------------------------------
+DATE: 2026-08-21 (Mid-Week HIIT Workout)
+--------------------------------------------------------------------------------
+2026-08-21T07:15:00Z | USR-001 | HR: 64 bpm  | Steps: 0     | BP: 115/75 mmHg | SpO2: 99% | ActiveCal: 0 kcal   | Stress: 14 (Resting)
+2026-08-21T10:00:00Z | USR-001 | HR: 82 bpm  | Steps: 3100  | BP: 121/78 mmHg | SpO2: 98% | ActiveCal: 160 kcal | Stress: 30 (Moderate)
+2026-08-21T18:15:00Z | USR-001 | HR: 172 bpm | Steps: 9500  | BP: 138/86 mmHg | SpO2: 96% | ActiveCal: 680 kcal | Stress: 85 (High Intensity)
+2026-08-21T22:00:00Z | USR-001 | HR: 68 bpm  | Steps: 11200 | BP: 117/76 mmHg | SpO2: 99% | ActiveCal: 810 kcal | Stress: 20 (Resting)
+
+--------------------------------------------------------------------------------
+DATE: 2026-08-22 (Strength Session)
+--------------------------------------------------------------------------------
+2026-08-22T07:30:00Z | USR-001 | HR: 72 bpm  | Steps: 840   | BP: 118/78 mmHg | SpO2: 99% | ActiveCal: 45 kcal  | Stress: 22 (Low)
+2026-08-22T13:00:00Z | USR-001 | HR: 88 bpm  | Steps: 4200  | BP: 122/80 mmHg | SpO2: 98% | ActiveCal: 290 kcal | Stress: 35 (Moderate)
+2026-08-22T17:00:00Z | USR-001 | HR: 145 bpm | Steps: 7800  | BP: 130/82 mmHg | SpO2: 98% | ActiveCal: 540 kcal | Stress: 65 (Lifting Peak)
+2026-08-22T21:45:00Z | USR-001 | HR: 66 bpm  | Steps: 9230  | BP: 116/76 mmHg | SpO2: 99% | ActiveCal: 690 kcal | Stress: 16 (Recovery)
+
+--------------------------------------------------------------------------------
+DATE: 2026-08-23 (Active Recovery Day)
+--------------------------------------------------------------------------------
+2026-08-23T08:00:00Z | USR-001 | HR: 59 bpm  | Steps: 0     | BP: 112/74 mmHg | SpO2: 99% | ActiveCal: 0 kcal   | Stress: 10 (Optimal)
+2026-08-23T14:30:00Z | USR-001 | HR: 70 bpm  | Steps: 5100  | BP: 116/75 mmHg | SpO2: 99% | ActiveCal: 210 kcal | Stress: 20 (Low)
+2026-08-23T19:00:00Z | USR-001 | HR: 118 bpm | Steps: 10230 | BP: 122/80 mmHg | SpO2: 98% | ActiveCal: 490 kcal | Stress: 45 (Brisk Walk)
+
+--------------------------------------------------------------------------------
+DATE: 2026-08-24 (Peak Performance Day)
+--------------------------------------------------------------------------------
+2026-08-24T06:45:00Z | USR-001 | HR: 60 bpm  | Steps: 0     | BP: 114/74 mmHg | SpO2: 99% | ActiveCal: 0 kcal   | Stress: 12 (Optimal)
+2026-08-24T09:05:00Z | USR-001 | HR: 68 bpm  | Steps: 9120  | BP: 115/76 mmHg | SpO2: 99% | ActiveCal: 410 kcal | Stress: 24 (Low)
+2026-08-24T18:00:00Z | USR-001 | HR: 165 bpm | Steps: 13400 | BP: 132/82 mmHg | SpO2: 97% | ActiveCal: 820 kcal | Stress: 72 (Endurance Run)

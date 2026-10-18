@@ -1,0 +1,102 @@
+================================================================================
+SMART FITNESS COMPANION - SLEEP & RECOVERY DATASET
+================================================================================
+Version: 1.0.0
+Description: Hypnogram sleep architecture logs, nocturnal heart rate variability (HRV),
+             deep/REM sleep metrics, recovery indices, and circadian telemetry.
+================================================================================
+
+[SLEEP_LOG_001]
+Date: 2026-08-20
+User ID: USR-001
+Bedtime: 23:15
+Wake Time: 07:00
+Total Duration: 7 Hours 45 Minutes (7.75 hrs)
+Sleep Score: 88 / 100 (Optimal Recovery)
+Sleep Architecture:
+  - Deep Sleep: 1 hr 55 mins (24.7%)
+  - REM Sleep: 1 hr 45 mins (22.6%)
+  - Light Sleep: 3 hrs 45 mins (48.4%)
+  - Awake Duration: 20 mins (4.3%)
+Nocturnal Biometrics:
+  - Average Resting Heart Rate: 56 bpm
+  - Lowest Heart Rate: 51 bpm (at 04:15 AM)
+  - Average HRV (RMSSD): 68 ms (High readiness)
+  - Breathing Rate: 14.2 breaths/min
+Recovery Assessment: Excellent physical repair and neural restoration. Ready for peak workout intensity.
+
+[SLEEP_LOG_002]
+Date: 2026-08-21
+User ID: USR-001
+Bedtime: 00:10
+Wake Time: 06:40
+Total Duration: 6 Hours 30 Minutes (6.50 hrs)
+Sleep Score: 72 / 100 (Fair Recovery)
+Sleep Architecture:
+  - Deep Sleep: 1 hr 15 mins (19.2%)
+  - REM Sleep: 1 hr 12 mins (18.5%)
+  - Light Sleep: 3 hrs 48 mins (58.5%)
+  - Awake Duration: 15 mins (3.8%)
+Nocturnal Biometrics:
+  - Average Resting Heart Rate: 62 bpm
+  - Lowest Heart Rate: 57 bpm (at 05:00 AM)
+  - Average HRV (RMSSD): 52 ms (Moderate readiness)
+  - Breathing Rate: 15.1 breaths/min
+Recovery Assessment: Sub-optimal REM sleep duration due to late bedtime. Moderate CNS fatigue detected. Recommended light-to-moderate training intensity.
+
+[SLEEP_LOG_003]
+Date: 2026-08-22
+User ID: USR-001
+Bedtime: 22:45
+Wake Time: 07:05
+Total Duration: 8 Hours 20 Minutes (8.33 hrs)
+Sleep Score: 94 / 100 (Peak Recovery)
+Sleep Architecture:
+  - Deep Sleep: 2 hrs 10 mins (26.0%)
+  - REM Sleep: 2 hrs 05 mins (25.0%)
+  - Light Sleep: 3 hrs 55 mins (47.0%)
+  - Awake Duration: 10 mins (2.0%)
+Nocturnal Biometrics:
+  - Average Resting Heart Rate: 53 bpm
+  - Lowest Heart Rate: 48 bpm (at 03:45 AM)
+  - Average HRV (RMSSD): 76 ms (Optimal readiness)
+  - Breathing Rate: 13.8 breaths/min
+Recovery Assessment: Exceptional deep sleep surge. Central nervous system fully primed for heavy strength session.
+
+[SLEEP_LOG_004]
+Date: 2026-08-23
+User ID: USR-001
+Bedtime: 23:00
+Wake Time: 07:10
+Total Duration: 8 Hours 10 Minutes (8.16 hrs)
+Sleep Score: 91 / 100 (Optimal Recovery)
+Sleep Architecture:
+  - Deep Sleep: 2 hrs 00 mins (24.5%)
+  - REM Sleep: 1 hr 55 mins (23.5%)
+  - Light Sleep: 4 hrs 00 mins (49.0%)
+  - Awake Duration: 15 mins (3.0%)
+Nocturnal Biometrics:
+  - Average Resting Heart Rate: 55 bpm
+  - Lowest Heart Rate: 50 bpm (at 04:30 AM)
+  - Average HRV (RMSSD): 71 ms (High readiness)
+  - Breathing Rate: 14.0 breaths/min
+Recovery Assessment: High circadian consistency. Autonomic tone balanced.
+
+[SLEEP_LOG_005]
+Date: 2026-08-24
+User ID: USR-001
+Bedtime: 22:30
+Wake Time: 06:36
+Total Duration: 8 Hours 06 Minutes (8.10 hrs)
+Sleep Score: 92 / 100 (Optimal Recovery)
+Sleep Architecture:
+  - Deep Sleep: 2 hrs 12 mins (27.2%)
+  - REM Sleep: 1 hr 58 mins (24.3%)
+  - Light Sleep: 3 hrs 44 mins (46.1%)
+  - Awake Duration: 12 mins (2.4%)
+Nocturnal Biometrics:
+  - Average Resting Heart Rate: 54 bpm
+  - Lowest Heart Rate: 49 bpm (at 04:00 AM)
+  - Average HRV (RMSSD): 74 ms (Optimal readiness)
+  - Breathing Rate: 13.9 breaths/min
+Recovery Assessment: Body fat target milestone achieved week of this sleep score streak.

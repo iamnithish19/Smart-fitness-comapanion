@@ -1,0 +1,118 @@
+================================================================================
+SMART FITNESS COMPANION - USER PROFILES & GOALS DATASET
+================================================================================
+Version: 1.0.0
+Description: User demographic profiles, baseline fitness measurements, body composition
+             progress logs, connected IoT devices, and target goal metrics.
+================================================================================
+
+--------------------------------------------------------------------------------
+USER DEMOGRAPHICS & PROFILE
+--------------------------------------------------------------------------------
+User ID: USR-001
+Full Name: Ava Thompson
+Email: ava@companion.fit
+Age: 28
+Gender: Female
+Height: 168.0 cm (5' 6")
+Current Weight: 63.5 kg (140.0 lbs)
+Baseline Weight: 65.0 kg (143.3 lbs)
+Fitness Level: Intermediate
+Primary Goal: Body Recomposition & Endurance Building
+Biography: Fitness enthusiast focusing on endurance, strength, and holistic recovery.
+
+--------------------------------------------------------------------------------
+BODY MEASUREMENT HISTORY
+--------------------------------------------------------------------------------
+
+[MEASUREMENT_001]
+Date: 2026-08-01
+Weight: 65.0 kg
+Body Fat Percentage: 21.5%
+Muscle Mass: 48.2 kg
+Chest Circumference: 92.0 cm
+Waist Circumference: 71.0 cm
+Hips Circumference: 96.0 cm
+Bicep Circumference: 30.0 cm
+
+[MEASUREMENT_002]
+Date: 2026-08-15
+Weight: 64.1 kg
+Body Fat Percentage: 20.8%
+Muscle Mass: 48.8 kg
+Chest Circumference: 92.5 cm
+Waist Circumference: 70.0 cm
+Hips Circumference: 95.0 cm
+Bicep Circumference: 30.5 cm
+
+[MEASUREMENT_003]
+Date: 2026-08-24
+Weight: 63.5 kg
+Body Fat Percentage: 20.1%
+Muscle Mass: 49.3 kg
+Chest Circumference: 93.0 cm
+Waist Circumference: 69.0 cm
+Hips Circumference: 94.0 cm
+Bicep Circumference: 31.0 cm
+
+--------------------------------------------------------------------------------
+ACTIVE FITNESS GOALS
+--------------------------------------------------------------------------------
+
+[GOAL_001]
+Goal ID: G-001
+Title: Reach 20.0% Body Fat Milestone
+Category: Body Composition
+Target Value: 20.0%
+Current Progress Value: 20.1%
+Status: In Progress (98% Complete)
+Deadline: 2026-09-15
+Strategy: Maintain high protein intake (145g/day) with 3x HIIT sessions per week.
+
+[GOAL_002]
+Goal ID: G-002
+Title: Run 10K Continuous Under 50 Minutes
+Category: Cardio Endurance
+Target Value: 49:59 (MM:SS)
+Current Progress Value: 52:40 (MM:SS)
+Status: In Progress (85% Complete)
+Deadline: 2026-10-01
+Strategy: Increase weekly long-run pace by 5 sec/km every fortnight.
+
+[GOAL_003]
+Goal ID: G-003
+Title: Daily Step Target Consistency (10,000 steps)
+Category: Daily Habit & Activity
+Target Value: 10,000 steps/day
+Current Progress Value: 9,850 avg steps/day
+Status: Achieved (100% Target Met)
+Deadline: 2026-08-31
+Strategy: Afternoon 15-minute walking breaks + morning outdoor dog walk.
+
+--------------------------------------------------------------------------------
+CONNECTED IOT DEVICES & HARDWARE TELEMETRY
+--------------------------------------------------------------------------------
+
+[DEVICE_001]
+Model Name: PulseBand X3 Pro (Smartwatch)
+Device ID: DEV-88192
+Battery Level: 84%
+Sync Status: Connected & Synced
+Last Active Sync: 10 minutes ago
+Features: Continuous PPG Heart Rate, SpO2 Optical Sensor, 6-Axis Accelerometer
+
+[DEVICE_002]
+Model Name: SmartScale BodyComposition v2
+Device ID: DEV-44021
+Battery Level: 92%
+Sync Status: Connected & Synced
+Last Active Sync: 1 hour ago
+Features: Dual-Frequency Bioelectrical Impedance (BIA), Weight, Body Water %
+
+[DEVICE_003]
+Model Name: HeartSync Chest Strap
+Device ID: DEV-11934
+Battery Level: 45%
+Sync Status: Pending Connection
+Last Active Sync: Yesterday
+Features: ECG Heart Rate Monitoring, HRV Inter-Beat Interval (IBI) capture

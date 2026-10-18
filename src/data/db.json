@@ -1,0 +1,397 @@
+{
+  "users": [
+    {
+      "user_id": 1,
+      "name": "Ava Thompson",
+      "email": "ava@companion.fit",
+      "role": "member",
+      "age": 28,
+      "weight": 63.5,
+      "height": 168,
+      "fitness_level": "Intermediate",
+      "bio": "Fitness enthusiast focusing on endurance, strength, and holistic recovery.",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80",
+      "assigned_trainer_id": 3
+    },
+    {
+      "user_id": 2,
+      "name": "Marcus Vance (Admin)",
+      "email": "marcus@gymmaster.fit",
+      "role": "admin",
+      "age": 36,
+      "weight": 85.0,
+      "height": 185,
+      "fitness_level": "Expert / Master Admin",
+      "bio": "Gym Administrator & Performance Director at Iron Forge Gym. Full financial, roster & system authority.",
+      "avatar": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=250&q=80",
+      "specialty": "Gym Master & Financial Administrator",
+      "gym_name": "Iron Forge Performance Gym"
+    },
+    {
+      "user_id": 3,
+      "name": "Liam Vance",
+      "email": "liam@companion.fit",
+      "role": "member",
+      "age": 25,
+      "weight": 78.0,
+      "height": 180,
+      "fitness_level": "Advanced",
+      "bio": "Crossfit enthusiast & 100m sprinter. Dedicated member.",
+      "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=250&q=80",
+      "specialty": "CrossFit & Hypertrophy Focus",
+      "gym_name": "Iron Forge Performance Gym"
+    },
+    {
+      "user_id": 4,
+      "name": "Sophia Chen",
+      "email": "sophia@companion.fit",
+      "role": "member",
+      "age": 26,
+      "weight": 58.0,
+      "height": 165,
+      "fitness_level": "Intermediate",
+      "bio": "HIIT and functional bodyweight training.",
+      "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&q=80",
+      "assigned_trainer_id": 3
+    },
+    {
+      "user_id": 5,
+      "name": "David Miller",
+      "email": "david@companion.fit",
+      "role": "member",
+      "age": 31,
+      "weight": 82.0,
+      "height": 178,
+      "fitness_level": "Beginner",
+      "bio": "Weight loss and cardio conditioning journey.",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&q=80",
+      "assigned_trainer_id": 2
+    },
+    {
+      "user_id": 6,
+      "name": "Elena Rostova",
+      "email": "elena@companion.fit",
+      "role": "member",
+      "age": 29,
+      "weight": 61.0,
+      "height": 170,
+      "fitness_level": "Advanced",
+      "bio": "Marathon runner and endurance enthusiast.",
+      "avatar": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=250&q=80",
+      "assigned_trainer_id": 3
+    },
+    {
+      "user_id": 7,
+      "name": "Gym Owner",
+      "email": "owner@gymmaster.fit",
+      "role": "owner",
+      "age": 44,
+      "weight": 83.5,
+      "height": 182,
+      "fitness_level": "Gym Owner & Executive Director",
+      "bio": "Executive Owner & Managing Director of Iron Forge Gym. Overseeing facility management, staff leadership, financial analytics, and gym expansion.",
+      "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=250&q=80",
+      "specialty": "Gym Owner & Executive Director",
+      "gym_name": "Iron Forge Performance Gym"
+    },
+    {
+      "user_id": 8,
+      "name": "Gym Dietician",
+      "email": "dietician@companion.fit",
+      "role": "dietician",
+      "age": 32,
+      "weight": 58.5,
+      "height": 168,
+      "fitness_level": "Sports Dietician & Nutritionist",
+      "bio": "Certified Clinical & Sports Dietician. Designs personalized macronutrient plans, metabolic conditioning diets, and nutritional recovery protocols.",
+      "avatar": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=250&q=80",
+      "specialty": "Clinical Nutrition & Macro Periodization",
+      "gym_name": "Iron Forge Performance Gym"
+    },
+    {
+      "user_id": 9,
+      "name": "Gym Consultant",
+      "email": "consultant@companion.fit",
+      "role": "consultant",
+      "age": 36,
+      "weight": 78.0,
+      "height": 178,
+      "fitness_level": "Workout Templates & Performance Consultant",
+      "bio": "Dedicated Gym Consultant providing standardized workout routines, periodization structures, and performance templates.",
+      "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80",
+      "specialty": "Workout Templates & Periodization",
+      "gym_name": "Iron Forge Performance Gym"
+    }
+  ],
+  "fitnessPlans": [
+    { "plan_id": 1, "user_id": 1, "plan_name": "Summer Shred", "start_date": "2026-06-01", "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+    { "plan_id": 2, "user_id": 1, "plan_name": "Strength Foundations", "start_date": "2026-07-15", "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+    { "plan_id": 3, "user_id": 3, "plan_name": "Hypertrophy Powerbuilding", "start_date": "2026-08-01", "image": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" },
+    { "plan_id": 4, "user_id": 4, "plan_name": "Metabolic Conditioning 30", "start_date": "2026-08-10", "image": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+    { "plan_id": 5, "user_id": 7, "plan_name": "Executive Wellness & Conditioning", "start_date": "2026-09-01", "image": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+    { "plan_id": 6, "user_id": 9, "plan_name": "Elite Biomechanics Protocol", "start_date": "2026-09-01", "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" }
+  ],
+  "workouts": [
+    { "workout_id": 1, "plan_id": 1, "type": "Cardio Interval", "duration_minutes": 40, "image": "https://images.unsplash.com/photo-1483721063994-4363e790757b?auto=format&fit=crop&w=600&q=80" },
+    { "workout_id": 2, "plan_id": 1, "type": "HIIT Burner", "duration_minutes": 25, "image": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" },
+    { "workout_id": 3, "plan_id": 2, "type": "Upper Body Strength", "duration_minutes": 50, "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+    { "workout_id": 4, "plan_id": 3, "type": "Heavy Deadlift & Core", "duration_minutes": 60, "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+    { "workout_id": 5, "plan_id": 4, "type": "Full Body Tabata", "duration_minutes": 30, "image": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" }
+  ],
+  "exercises": [
+    { "exercise_id": 1, "workout_id": 1, "name": "Treadmill Run", "sets": 1, "reps": 1, "image": "https://images.unsplash.com/photo-1483721063994-4363e790757b?auto=format&fit=crop&w=300&q=80" },
+    { "exercise_id": 2, "workout_id": 1, "name": "Jump Rope", "sets": 4, "reps": 60, "image": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=300&q=80" },
+    { "exercise_id": 3, "workout_id": 2, "name": "Burpees", "sets": 5, "reps": 15, "image": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=300&q=80" },
+    { "exercise_id": 4, "workout_id": 2, "name": "Mountain Climbers", "sets": 5, "reps": 20, "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=300&q=80" },
+    { "exercise_id": 5, "workout_id": 3, "name": "Bench Press", "sets": 4, "reps": 8, "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=300&q=80" },
+    { "exercise_id": 6, "workout_id": 3, "name": "Pull Ups", "sets": 4, "reps": 10, "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=300&q=80" }
+  ],
+  "healthTrackers": [
+    { "record_id": 1, "user_id": 1, "heart_rate": 72, "steps": 8450, "sys_bp": 118, "dia_bp": 78, "spo2": 99, "timestamp": "2026-08-22T07:30:00" },
+    { "record_id": 2, "user_id": 1, "heart_rate": 118, "steps": 10230, "sys_bp": 122, "dia_bp": 80, "spo2": 98, "timestamp": "2026-08-23T18:10:00" },
+    { "record_id": 3, "user_id": 1, "heart_rate": 68, "steps": 9120, "sys_bp": 115, "dia_bp": 76, "spo2": 99, "timestamp": "2026-08-24T09:05:00" },
+    { "record_id": 4, "user_id": 3, "heart_rate": 64, "steps": 14200, "sys_bp": 116, "dia_bp": 74, "spo2": 99, "timestamp": "2026-08-24T10:00:00" },
+    { "record_id": 5, "user_id": 4, "heart_rate": 75, "steps": 9850, "sys_bp": 119, "dia_bp": 79, "spo2": 98, "timestamp": "2026-08-24T11:15:00" }
+  ],
+  "devices": [
+    { "device_id": 1, "user_id": 1, "model": "PulseBand X3 Pro", "sync_status": "Synced", "battery": 84, "last_sync": "10 mins ago", "image": "https://images.unsplash.com/photo-1510017803434-a899398421b3?auto=format&fit=crop&w=400&q=80" },
+    { "device_id": 2, "user_id": 1, "model": "SmartScale BodyComposition v2", "sync_status": "Synced", "battery": 92, "last_sync": "1 hour ago", "image": "https://images.unsplash.com/photo-1576243345690-4e4b79b63288?auto=format&fit=crop&w=400&q=80" },
+    { "device_id": 3, "user_id": 1, "model": "HeartSync Chest Strap", "sync_status": "Pending", "battery": 45, "last_sync": "Yesterday", "image": "https://images.unsplash.com/photo-1557935728-e6d1eaabe558?auto=format&fit=crop&w=400&q=80" }
+  ],
+  "nutritionPlans": [
+    { "nutrition_id": 1, "user_id": 1, "daily_calories": 2100, "diet_type": "High Protein", "protein_g": 145, "carbs_g": 210, "fats_g": 65 },
+    { "nutrition_id": 2, "user_id": 3, "daily_calories": 3100, "diet_type": "Bulk & Strength", "protein_g": 190, "carbs_g": 350, "fats_g": 85 },
+    { "nutrition_id": 3, "user_id": 4, "diet_type": "Keto Lean", "daily_calories": 1850, "protein_g": 130, "carbs_g": 40, "fats_g": 110 },
+    { "nutrition_id": 4, "user_id": 8, "daily_calories": 2350, "diet_type": "Dietician Clinical Macro Protocol", "protein_g": 175, "carbs_g": 240, "fats_g": 65 }
+  ],
+  "progressReports": [
+    { "report_id": 1, "user_id": 1, "report_date": "2026-08-01", "completion_percentage": 62, "summary": "Baseline check-in. Solid strength start, working on cardio endurance.", "image": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?auto=format&fit=crop&w=600&q=80" },
+    { "report_id": 2, "user_id": 1, "report_date": "2026-08-10", "completion_percentage": 78, "summary": "Noticeable definition in core and arms. Recovery score improved.", "image": "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80" },
+    { "report_id": 3, "user_id": 1, "report_date": "2026-08-20", "completion_percentage": 88, "summary": "Peak performance week! Body fat reached 20.1% target milestone.", "image": "https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?auto=format&fit=crop&w=600&q=80" },
+    { "report_id": 4, "user_id": 3, "report_date": "2026-08-22", "completion_percentage": 94, "summary": "Deadlift PR smashed at 210kg! Excellent recovery metrics.", "image": "https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=600&q=80" }
+  ],
+  "sleepLogs": [
+    { "sleep_id": 1, "user_id": 1, "date": "2026-08-22", "duration_hours": 7.8, "score": 85, "rem_hours": 1.9, "deep_hours": 2.1, "light_hours": 3.8, "quality": "Excellent" },
+    { "sleep_id": 2, "user_id": 1, "date": "2026-08-23", "duration_hours": 6.5, "score": 72, "rem_hours": 1.2, "deep_hours": 1.5, "light_hours": 3.8, "quality": "Fair" },
+    { "sleep_id": 3, "user_id": 1, "date": "2026-08-24", "duration_hours": 8.1, "score": 92, "rem_hours": 2.2, "deep_hours": 2.4, "light_hours": 3.5, "quality": "Optimal" }
+  ],
+  "hydrationLogs": [
+    { "hydration_id": 1, "user_id": 1, "date": "2026-08-24", "amount_ml": 2250, "target_ml": 3000 }
+  ],
+  "recipes": [
+    { "recipe_id": 1, "title": "Grilled Salmon Quinoa Bowl", "category": "High Protein", "calories": 520, "protein": 42, "carbs": 48, "fats": 16, "time": "20 mins", "prep": "Sear salmon with lemon pepper, serve over warm fluffy quinoa with avocado and steamed broccoli.", "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?auto=format&fit=crop&w=600&q=80" },
+    { "recipe_id": 2, "title": "Berry Power Protein Smoothie", "category": "Breakfast", "calories": 380, "protein": 34, "carbs": 42, "fats": 6, "time": "5 mins", "prep": "Blend whey protein isolate, frozen blueberries, chia seeds, spinach, and almond milk.", "image": "https://images.unsplash.com/photo-1553530666-ba11a7da3888?auto=format&fit=crop&w=600&q=80" },
+    { "recipe_id": 3, "title": "Lean Turkey & Sweet Potato Skillet", "category": "Dinner", "calories": 460, "protein": 38, "carbs": 45, "fats": 12, "time": "25 mins", "prep": "Sauté ground turkey breast with diced sweet potatoes, bell peppers, and garlic in olive oil.", "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" },
+    { "recipe_id": 4, "title": "Greek Yogurt Parfait with Honey", "category": "Snack", "calories": 290, "protein": 24, "carbs": 32, "fats": 5, "time": "5 mins", "prep": "Layer non-fat Greek yogurt, raw almonds, mixed berries, and a drizzle of organic honey.", "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?auto=format&fit=crop&w=600&q=80" },
+    { "recipe_id": 5, "title": "Avocado Egg Protein Toast", "category": "Breakfast", "calories": 350, "protein": 22, "carbs": 28, "fats": 14, "time": "10 mins", "prep": "Sourdough toast topped with smashed avocado, poached organic eggs, chili flakes, and hemp seeds.", "image": "https://images.unsplash.com/photo-1525351484163-7529414344d8?auto=format&fit=crop&w=600&q=80" },
+    { "recipe_id": 6, "title": "Grilled Chicken Power Bowl", "category": "High Protein", "calories": 490, "protein": 46, "carbs": 40, "fats": 12, "time": "15 mins", "prep": "Grilled chicken breast, roasted sweet potatoes, kale, pumpkin seeds, and tahini dressing.", "image": "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?auto=format&fit=crop&w=600&q=80" }
+  ],
+  "bodyMeasurements": [
+    { "measurement_id": 1, "user_id": 1, "date": "2026-08-01", "weight": 65.0, "body_fat": 21.5, "muscle_mass": 48.2, "chest_cm": 92, "waist_cm": 71, "hips_cm": 96, "bicep_cm": 30 },
+    { "measurement_id": 2, "user_id": 1, "date": "2026-08-15", "weight": 64.1, "body_fat": 20.8, "muscle_mass": 48.8, "chest_cm": 92.5, "waist_cm": 70, "hips_cm": 95, "bicep_cm": 30.5 },
+    { "measurement_id": 3, "user_id": 1, "date": "2026-08-24", "weight": 63.5, "body_fat": 20.1, "muscle_mass": 49.3, "chest_cm": 93, "waist_cm": 69, "hips_cm": 94, "bicep_cm": 31 }
+  ],
+  "goals": [
+    { "goal_id": 1, "user_id": 1, "title": "Reach 20% Body Fat", "category": "Body Composition", "target_value": "20%", "current_value": "20.1%", "status": "In Progress", "deadline": "2026-09-15" },
+    { "goal_id": 2, "user_id": 1, "title": "Run 10K under 50 mins", "category": "Cardio Endurance", "target_value": "49:59", "current_value": "52:40", "status": "In Progress", "deadline": "2026-10-01" },
+    { "goal_id": 3, "user_id": 1, "title": "Hit 10,000 Steps Daily", "category": "Habit", "target_value": "10k steps", "current_value": "9.2k steps", "status": "Achieved", "deadline": "2026-08-31" }
+  ],
+  "habits": [
+    { "habit_id": 1, "user_id": 1, "name": "Morning Hydration (500ml)", "category": "Health", "streak": 14, "completed_today": true },
+    { "habit_id": 2, "user_id": 1, "name": "10 Minute Mobility Stretch", "category": "Recovery", "streak": 8, "completed_today": true },
+    { "habit_id": 3, "user_id": 1, "name": "No Sugar After 8 PM", "category": "Nutrition", "streak": 5, "completed_today": false },
+    { "habit_id": 4, "user_id": 1, "name": "8 Hours Sleep Target", "category": "Rest", "streak": 12, "completed_today": true }
+  ],
+  "supplements": [
+    { "supp_id": 1, "user_id": 1, "name": "Whey Protein Isolate", "dosage": "30g", "timing": "Post-Workout", "taken_today": true, "stock_count": 24, "image": "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?auto=format&fit=crop&w=300&q=80" },
+    { "supp_id": 2, "user_id": 1, "name": "Creatine Monohydrate", "dosage": "5g", "timing": "Morning", "taken_today": true, "stock_count": 45, "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?auto=format&fit=crop&w=300&q=80" },
+    { "supp_id": 3, "user_id": 1, "name": "Omega-3 Fish Oil", "dosage": "1000mg", "timing": "With Lunch", "taken_today": true, "stock_count": 60, "image": "https://images.unsplash.com/photo-1577401239170-897942555fb3?auto=format&fit=crop&w=300&q=80" },
+    { "supp_id": 4, "user_id": 1, "name": "Magnesium Glycinate", "dosage": "400mg", "timing": "Before Bed", "taken_today": false, "stock_count": 30, "image": "https://images.unsplash.com/photo-1471864190281-a93a3070b6de?auto=format&fit=crop&w=300&q=80" }
+  ],
+  "chatMessages": [
+    { "msg_id": 1, "user_id": 1, "sender": "ai", "text": "Hello Ava! I am your AI Fitness Coach. Your sleep recovery score reached 92 today! Ready for your workout?", "timestamp": "09:30 AM" }
+  ],
+  "communityRankings": [
+    { "rank": 1, "user_id": 3, "name": "Coach Liam Vance", "steps": 14200, "points": 2850, "badge": "Elite Runner", "avatar": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=250&q=80" },
+    { "rank": 2, "user_id": 1, "name": "Ava Thompson", "steps": 10230, "points": 2410, "badge": "Consistency Champion", "avatar": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=250&q=80" },
+    { "rank": 3, "user_id": 4, "name": "Sophia Chen", "steps": 9850, "points": 2180, "badge": "HIIT Specialist", "avatar": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=250&q=80" },
+    { "rank": 4, "user_id": 2, "name": "Coach Marcus Vance", "steps": 16500, "points": 3500, "badge": "Gym Master / Coach", "avatar": "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=250&q=80" }
+  ],
+  "achievements": [
+    { "achievement_id": 1, "key": "first_workout", "title": "First Workout", "desc": "Complete your very first workout session.", "icon": "🏋️‍♂️", "category": "Workout", "target_val": 1 },
+    { "achievement_id": 2, "key": "streak_7", "title": "7 Day Streak", "desc": "Maintain an active workout streak for 7 consecutive days.", "icon": "🔥", "category": "Streak", "target_val": 7 },
+    { "achievement_id": 3, "key": "streak_30", "title": "30 Day Streak", "desc": "Log workouts or habits for 30 consecutive days.", "icon": "⚡", "category": "Streak", "target_val": 30 },
+    { "achievement_id": 4, "key": "workouts_100", "title": "100 Workouts", "desc": "Cross the 100 total completed workout milestone.", "icon": "💯", "category": "Workout", "target_val": 100 },
+    { "achievement_id": 5, "key": "steps_10k", "title": "10K Steps", "desc": "Reach 10,000 steps in a single day.", "icon": "👟", "category": "Steps", "target_val": 10000 },
+    { "achievement_id": 6, "key": "steps_100k", "title": "100K Total Steps", "desc": "Accumulate 100,000 total steps on your tracker.", "icon": "🏃", "category": "Steps", "target_val": 100000 },
+    { "achievement_id": 7, "key": "calorie_crusher", "title": "Calorie Crusher", "desc": "Burn over 500 kcal in a single training session.", "icon": "🔥", "category": "Calorie", "target_val": 500 },
+    { "achievement_id": 8, "key": "early_bird", "title": "Early Bird", "desc": "Complete a workout before 8:00 AM in the morning.", "icon": "🌅", "category": "Special", "target_val": 1 },
+    { "achievement_id": 9, "key": "workout_warrior", "title": "Workout Warrior", "desc": "Complete 5 or more workouts in a single week.", "icon": "🛡️", "category": "Workout", "target_val": 5 },
+    { "achievement_id": 10, "key": "personal_best", "title": "Personal Best", "desc": "Break a personal record in strength or endurance.", "icon": "🥇", "category": "Performance", "target_val": 1 },
+    { "achievement_id": 11, "key": "consistency_king", "title": "Consistency King", "desc": "Maintain a 14-day unbroken daily activity streak.", "icon": "👑", "category": "Streak", "target_val": 14 },
+    { "achievement_id": 12, "key": "challenge_champion", "title": "Challenge Champion", "desc": "Win first place in a Friend Challenge battle.", "icon": "🏆", "category": "Social", "target_val": 1 }
+  ],
+  "userAchievements": [
+    { "user_achievement_id": 1, "user_id": 1, "achievement_id": 1, "unlocked": true, "progress": 100, "date_earned": "2026-08-01" },
+    { "user_achievement_id": 2, "user_id": 1, "achievement_id": 2, "unlocked": true, "progress": 100, "date_earned": "2026-08-14" },
+    { "user_achievement_id": 3, "user_id": 1, "achievement_id": 5, "unlocked": true, "progress": 100, "date_earned": "2026-08-23" },
+    { "user_achievement_id": 4, "user_id": 1, "achievement_id": 6, "unlocked": true, "progress": 100, "date_earned": "2026-08-24" },
+    { "user_achievement_id": 5, "user_id": 1, "achievement_id": 10, "unlocked": true, "progress": 100, "date_earned": "2026-08-20" },
+    { "user_achievement_id": 6, "user_id": 1, "achievement_id": 11, "unlocked": true, "progress": 100, "date_earned": "2026-08-22" },
+    { "user_achievement_id": 7, "user_id": 1, "achievement_id": 3, "unlocked": false, "progress": 46, "date_earned": null },
+    { "user_achievement_id": 8, "user_id": 1, "achievement_id": 4, "unlocked": false, "progress": 14, "date_earned": null },
+    { "user_achievement_id": 9, "user_id": 1, "achievement_id": 7, "unlocked": false, "progress": 85, "date_earned": null },
+    { "user_achievement_id": 10, "user_id": 1, "achievement_id": 8, "unlocked": true, "progress": 100, "date_earned": "2026-08-10" },
+    { "user_achievement_id": 11, "user_id": 1, "achievement_id": 9, "unlocked": true, "progress": 100, "date_earned": "2026-08-18" },
+    { "user_achievement_id": 12, "user_id": 1, "achievement_id": 12, "unlocked": false, "progress": 0, "date_earned": null }
+  ],
+  "friendships": [
+    { "friendship_id": 1, "user_id": 1, "friend_id": 3, "status": "accepted", "created_at": "2026-08-01" },
+    { "friendship_id": 2, "user_id": 1, "friend_id": 4, "status": "accepted", "created_at": "2026-08-05" },
+    { "friendship_id": 3, "user_id": 1, "friend_id": 5, "status": "pending", "created_at": "2026-08-24" },
+    { "friendship_id": 4, "user_id": 4, "friend_id": 3, "status": "accepted", "created_at": "2026-08-10" }
+  ],
+  "challenges": [
+    { "challenge_id": 1, "title": "Weekly 70K Step Shred", "type": "step", "created_by": 3, "start_date": "2026-08-20", "end_date": "2026-08-27", "target_val": 70000, "status": "active", "winner_id": null },
+    { "challenge_id": 2, "title": "14-Day Streak Battle", "type": "streak", "created_by": 1, "start_date": "2026-08-15", "end_date": "2026-08-29", "target_val": 14, "status": "active", "winner_id": null },
+    { "challenge_id": 3, "title": "30-Day Workout Marathon", "type": "workout", "created_by": 2, "start_date": "2026-07-20", "end_date": "2026-08-20", "target_val": 25, "status": "completed", "winner_id": 3 }
+  ],
+  "challengeParticipants": [
+    { "participant_id": 1, "challenge_id": 1, "user_id": 3, "progress_value": 64200, "rank": 1, "status": "accepted" },
+    { "participant_id": 2, "challenge_id": 1, "user_id": 1, "progress_value": 58900, "rank": 2, "status": "accepted" },
+    { "participant_id": 3, "challenge_id": 1, "user_id": 4, "progress_value": 51200, "rank": 3, "status": "accepted" },
+    { "participant_id": 4, "challenge_id": 2, "user_id": 1, "progress_value": 14, "rank": 1, "status": "accepted" },
+    { "participant_id": 5, "challenge_id": 2, "user_id": 4, "progress_value": 10, "rank": 2, "status": "accepted" },
+    { "participant_id": 6, "challenge_id": 3, "user_id": 3, "progress_value": 28, "rank": 1, "status": "accepted" },
+    { "participant_id": 7, "challenge_id": 3, "user_id": 1, "progress_value": 22, "rank": 2, "status": "accepted" }
+  ],
+  "messages": [
+    { "msg_id": 1, "sender_id": 3, "receiver_id": 1, "text": "Hey Ava! Excellent progress on your Summer Shred plan. Keep pushing compound sets!", "timestamp": "2026-08-24T10:15:00", "read": true },
+    { "msg_id": 2, "sender_id": 1, "receiver_id": 3, "text": "Thanks Coach Liam! Reached 20.1% body fat milestone today.", "timestamp": "2026-08-24T10:18:00", "read": true },
+    { "msg_id": 3, "sender_id": 3, "receiver_id": 1, "text": "Awesome milestone! I assigned a new high-protein macro target for you.", "timestamp": "2026-08-24T10:20:00", "read": false },
+    { "msg_id": 4, "sender_id": 2, "receiver_id": 3, "text": "Liam, please review the new metabolic conditioning template for the team.", "timestamp": "2026-08-24T11:00:00", "read": true }
+  ],
+  "workoutTemplates": [
+    {
+      "template_id": 1,
+      "name": "Beginner Weight Loss",
+      "description": "High-burn metabolic circuits designed for accelerated fat loss & joint stability.",
+      "goal": "Weight Loss",
+      "difficulty": "Beginner",
+      "duration_weeks": 4,
+      "trainer_id": 2,
+      "created_date": "2026-08-01",
+      "exercises": [
+        { "name": "Bodyweight Squats", "sets": 3, "reps": 15, "rest_seconds": 45 },
+        { "name": "Incline Push-Ups", "sets": 3, "reps": 12, "rest_seconds": 45 },
+        { "name": "Brisk Treadmill Walk", "sets": 1, "reps": 20, "rest_seconds": 60 }
+      ]
+    },
+    {
+      "template_id": 2,
+      "name": "Muscle Building Hypertrophy",
+      "description": "Progressive resistance split targeting muscle hypertrophy and core strength.",
+      "goal": "Muscle Building",
+      "difficulty": "Intermediate",
+      "duration_weeks": 6,
+      "trainer_id": 3,
+      "created_date": "2026-08-05",
+      "exercises": [
+        { "name": "Barbell Bench Press", "sets": 4, "reps": 10, "rest_seconds": 90 },
+        { "name": "Barbell Romanian Deadlift", "sets": 4, "reps": 8, "rest_seconds": 90 },
+        { "name": "Dumbbell Lateral Raises", "sets": 4, "reps": 12, "rest_seconds": 60 }
+      ]
+    },
+    {
+      "template_id": 3,
+      "name": "Powerlifting Strength Training",
+      "description": "Heavy compound movements focusing on maximum strength capacity.",
+      "goal": "Strength Training",
+      "difficulty": "Advanced",
+      "duration_weeks": 8,
+      "trainer_id": 2,
+      "created_date": "2026-08-10",
+      "exercises": [
+        { "name": "Heavy Barbell Back Squat", "sets": 5, "reps": 5, "rest_seconds": 180 },
+        { "name": "Conventional Deadlift", "sets": 5, "reps": 3, "rest_seconds": 180 },
+        { "name": "Overhead Military Press", "sets": 4, "reps": 6, "rest_seconds": 120 }
+      ]
+    },
+    {
+      "template_id": 4,
+      "name": "Full Body Athletic Conditioning",
+      "description": "Dynamic plyometrics and kettlebell flows for full body endurance.",
+      "goal": "Full Body",
+      "difficulty": "Intermediate",
+      "duration_weeks": 4,
+      "trainer_id": 3,
+      "created_date": "2026-08-12",
+      "exercises": [
+        { "name": "Kettlebell Swings", "sets": 4, "reps": 20, "rest_seconds": 45 },
+        { "name": "Box Jumps", "sets": 4, "reps": 12, "rest_seconds": 60 },
+        { "name": "Burpee Over Bar", "sets": 3, "reps": 15, "rest_seconds": 60 }
+      ]
+    }
+  ],
+  "workoutAssignments": [
+    { "assignment_id": 1, "template_id": 1, "user_id": 4, "trainer_id": 3, "assigned_at": "2026-08-15T09:00:00" },
+    { "assignment_id": 2, "template_id": 2, "user_id": 1, "trainer_id": 3, "assigned_at": "2026-08-18T11:30:00" }
+  ],
+  "membershipPlans": [
+    {
+      "plan_id": 1,
+      "name": "Basic Membership",
+      "price": 29,
+      "duration": "1 Month",
+      "features": ["Access to gym floor", "Standard workout tracking", "Community leaderboard access"],
+      "max_sessions": 12,
+      "status": "Active"
+    },
+    {
+      "plan_id": 2,
+      "name": "Premium Athlete",
+      "price": 59,
+      "duration": "1 Month",
+      "features": ["Unlimited gym access", "Personal trainer 1-on-1 chat", "AI Coach Insights & Meal Plans", "Wearable device integration"],
+      "max_sessions": null,
+      "status": "Active"
+    },
+    {
+      "plan_id": 3,
+      "name": "Pro Performance",
+      "price": 99,
+      "duration": "1 Month",
+      "features": ["All Premium features", "Customized macro plans", "Biweekly coach check-ins", "VIP recovery lounge access"],
+      "max_sessions": null,
+      "status": "Active"
+    },
+    {
+      "plan_id": 4,
+      "name": "Annual VIP Pass",
+      "price": 499,
+      "duration": "1 Year",
+      "features": ["All Pro features for 12 months", "20% discount on supplements", "Free gym apparel bundle", "Priority trainer scheduling"],
+      "max_sessions": null,
+      "status": "Active"
+    }
+  ],
+  "memberMemberships": [
+    { "membership_id": 1, "user_id": 1, "plan_id": 2, "start_date": "2026-08-01", "expiry_date": "2026-09-01", "amount": 59, "payment_status": "Paid", "renewal_date": "2026-09-01" },
+    { "membership_id": 2, "user_id": 3, "plan_id": 3, "start_date": "2026-08-01", "expiry_date": "2026-09-01", "amount": 99, "payment_status": "Paid", "renewal_date": "2026-09-01" },
+    { "membership_id": 3, "user_id": 4, "plan_id": 1, "start_date": "2026-08-10", "expiry_date": "2026-09-10", "amount": 29, "payment_status": "Paid", "renewal_date": "2026-09-10" },
+    { "membership_id": 4, "user_id": 5, "plan_id": 2, "start_date": "2026-08-15", "expiry_date": "2026-09-15", "amount": 59, "payment_status": "Pending", "renewal_date": "2026-09-15" },
+    { "membership_id": 5, "user_id": 6, "plan_id": 4, "start_date": "2026-01-01", "expiry_date": "2026-12-31", "amount": 499, "payment_status": "Paid", "renewal_date": "2026-12-31" }
+  ],
+  "payments": [
+    { "payment_id": 1, "user_id": 1, "membership_id": 1, "amount": 59, "method": "Credit Card", "status": "Paid", "date": "2026-08-01" },
+    { "payment_id": 2, "user_id": 3, "membership_id": 2, "amount": 99, "method": "Credit Card", "status": "Paid", "date": "2026-08-01" },
+    { "payment_id": 3, "user_id": 4, "membership_id": 3, "amount": 29, "method": "PayPal", "status": "Paid", "date": "2026-08-10" },
+    { "payment_id": 4, "user_id": 5, "membership_id": 4, "amount": 59, "method": "Bank Transfer", "status": "Pending", "date": "2026-08-15" },
+    { "payment_id": 5, "user_id": 6, "membership_id": 5, "amount": 499, "method": "Credit Card", "status": "Paid", "date": "2026-01-01" }
+  ],
+  "notifications": [
+    { "notif_id": 1, "user_id": 1, "title": "🏆 Achievement Unlocked!", "message": "You earned the 100K Total Steps badge!", "type": "achievement", "is_read": false, "timestamp": "2026-08-24T09:10:00" },
+    { "notif_id": 2, "user_id": 1, "title": "⚔️ Step Challenge Update", "message": "Coach Liam Vance overtook you on the Weekly 70K Step Shred leaderboard!", "type": "challenge_invite", "is_read": false, "timestamp": "2026-08-24T10:00:00" },
+    { "notif_id": 3, "user_id": 1, "title": "💬 Message from Coach Liam", "message": "Awesome milestone! I assigned a new high-protein macro target for you.", "type": "message", "is_read": false, "timestamp": "2026-08-24T10:20:00" }
+  ]
+}
